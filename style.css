@@ -23,8 +23,9 @@ body {
   gap: 008px;
   width: 100%;
   height: 100%;
-  /* max-width: 412px; */
   margin: auto;
+  background: #283038;
+  color: #F3F3F3;
   overflow: hidden;
 }
 
@@ -38,17 +39,48 @@ body {
 }
 
 #app-body {
-  /* display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-   */
-  /* gap: 0px; */
-  overflow-y: scroll;
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
   gap: 0px;
   width: 100%;
   height: 100%;
+  /* overflow-y: scroll; */
+}
+
+#app-header input {
+  font-size: 20px;
+  padding: 6px 4px 2px;
+  background: none;
+  color: #F3F3F3;
+  border: none;
+  border-bottom: 1px solid #F3F3F3;
+  width: 60px;
+}
+
+svg {
+  touch-action: none;
+}
+
+.curve {
+  stroke: #E8C313;
+  fill: transparent;
+}
+
+#surface-layer {
+  filter: blur(0.075px);
+}
+
+.hud-text {
+  font-size: 0.4em;
+}
+
+.circ1 {
+  fill: #D13D3D;
+}
+
+#dot {
+  fill: #F7F7F7;
+  stroke: #FFFFFF;
+  stroke-width: 2px;
 }
