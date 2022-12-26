@@ -14,14 +14,6 @@ class FrequencyDot {
 
   constructor() {
     this.#frequencySubject$ = new BehaviorSubject({ frequency: 150 })
-      .pipe(
-        map(x => x),
-        // tap(({frequency}) => {
-        //   if (this.audio) {
-        //     this.audio.oscillator.frequency.value = frequency;
-        //   }
-        // })
-      );
 
     this.#frequency$ = this.#frequencySubject$.asObservable();
 
@@ -81,45 +73,6 @@ class FrequencyDot {
 
 export const dot = new FrequencyDot();
 
-// export const dot = {
-//   sprite: null,
-//   track: null,
-//   dir: -1,
-
-//   init: function(sprite, track) {
-//     this.sprite = document.getElementById(sprite);
-//     this.track = document.getElementById(track);
-//   },
-
-//   move: function(u) {
-//     let spot;
-
-//     if (this.dir > 0) {
-//       spot = this.track.getTotalLength() - (u * this.track.getTotalLength());
-//     }
-
-//     else spot = (u * this.track.getTotalLength());
-
-//     if (u >= 1) {
-//       this.dir = -this.dir;
-//       // console.warn('this.dir', this.dir);
-//     }
-
-//     const p = this.track.getPointAtLength(spot);
-
-
-//     this.sprite.setAttribute("transform", `translate(${p.x}, ${p.y})`);
-//     const frequency = 100 + p.y * 2;
-//   
-//    if (this.audio) {
-//       this.audio.oscillator.frequency.value = frequency;
-//     }
-
-//     this.sprite.dispatchEvent(new CustomEvent('frequencychange', { bubbles: true, detail: { dotY: p.y, frequency } }))
-//   },
-// };
-
-
 export const anim = {
   start: function(duration) {
     this.duration = duration;
@@ -144,11 +97,3 @@ export const anim = {
     this.start(this.duration);
   }
 };
-
-
-// window.onload = () => {
-//   dot.init('dot', 'curve');
-//   anim.start(2000);
-// }
-
-console.log({ dot });

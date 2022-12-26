@@ -1,105 +1,57 @@
 export class AudioController {
+  #type = 'triangle';
+  #oscillator = null;
+  #gain = null;
+  #ctx = null;
+  #gainstash= [];
+  #controllers= [];
+  
   constructor() {
     this.played = false;
     this.playing = false;
-    this.#type = 'triangle';
-    this.controllers = [];
-    this.gainstash = []
+    this.#controllers = [];
+    this.#gainstash = []
 
-    this.ctx = new AudioContext();
-    // this.oscillator = this.ctx.createOscillator({ type: this.type})
-    this.oscillator = this.ctx.createOscillator()
-    this.oscillator.type = this.type
-    this.gain = this.ctx.createGain();
-    this.gain.gain.value = 0.5;
-    this.oscillator.connect(this.gain);
-    this.oscillator.frequency.value = 200;
-    this.playing = false;
+    this.#ctx = new AudioContext();
+    
+    this.#oscillator = this.#ctx.createOscillator()
+    this.#oscillator.type = this.type
+    
+    this.#gain = this.#ctx.createGain();
+   
+    this.#gain.gain.value = 0.5;
+    this.#oscillator.frequency.value = 200;
+    this.#oscillator.connect(this.#gain);
+  
 
-
-    this.gainstash.push(this.gain);
+    this.#gainstash.push(this.#gain);
     this.updateGains();
-    this.oscillator.start(this.ctx.currentTime);
-    this.oscillator.connect(this.gain);
+   
+    this.#oscillator.start(this.#ctx.currentTime);
+    this.#oscillator.connect(this.#gain);
 
     this.play = () => {
-      this.gain.connect(this.ctx.destination);
-    }
+      this.#gain.connect(this.#ctx.destination);
+    };
 
     this.setFrequency = this.#setFrequency.bind(this);
   }
 
   updateGains() {
-    const val = 0.76 / this.gainstash.length
+    const val = 0.76 / this.#gainstash.length;
 
-    this.gainstash.forEach((x, i) => {
-      x.gain.exponentialRampToValueAtTime(val, this.ctx.currentTime + 0.05);
+    this.#gainstash.forEach((x, i) => {
+      x.gain.exponentialRampToValueAtTime(val, this.#ctx.currentTime + 0.05);
     });
   }
-
-
-  attachOscillator(obj) {
-    const ctx = this.ctx
-    obj.audio = obj.audio ? obj.audio : {}
-    obj.audio.oscillator = ctx.createOscillator({ type: 'sawtooth' })
-    obj.audio.oscillator.type = 'triangle'
-    obj.audio.gain = ctx.createGain()
-    obj.audio.oscillator.connect(obj.audio.gain);
-
-    obj.audio.oscillator.frequency.value = obj.frequency || 50 //* 2
-    obj.audio.playing = false;
-
-    this.gainstash.push(obj.audio.gain)
-    this.updateGains()
-    obj.audio.oscillator.start(ctx.currentTime);
-    obj.audio.oscillator.connect(obj.audio.gain)
-
-    obj.audio.play = () => {
-      obj.audio.gain.connect(ctx.destination);
-    }
-    obj.audio.stop = () => {
-      // obj.audio.gain.gain.value = 0
-      // obj.audio.gain.setValueAtTime(obj.audio.gain.value, ctx.currentTime);
-      obj.audio.gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
-
-    }
-    // obj.audio.stop = () => obj.audio.gain.disconnect();
-  }
-
-  // #attachOscillatorToSelf(obj) {
-  //   const ctx = this.ctx
-  //   // this = this ? this : {}
-  //   this.oscillator = ctx.createOscillator({ type: 'sawtooth' })
-  //   this.oscillator.type = 'triangle'
-  //   this.gain = ctx.createGain()
-  //   this.oscillator.connect(this.gain);
-
-  //   this.osc.frequency.value = 200 //obj.frequency || 50 //* 2
-  //   this.playing = false;
-
-  //   this.gainstash.push(this.gain)
-  //   this.updateGains()
-  //   this.oscillator.start(ctx.currentTime);
-  //   this.oscillator.connect(this.gain)
-  //   this.play = () => {
-  //     this.gain.connect(ctx.destination);
-  //   }
-  //   this.stop = () => {
-  //     // this.gain.gain.value = 0
-  //     // this.gain.setValueAtTime(this.gain.value, ctx.currentTime);
-  //     this.gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
-
-  //   }
-  //   // obj.audio.stop = () => obj.audio.gain.disconnect();
-  // }
 
   removeGain(gain) {
     // Important! Setting a scheduled parameter value
 
-    // gain.gain.setValueAtTime(gain.gain.value, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.03);
+    // gain.gain.setValueAtTime(gain.gain.value, this.#ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, this.#ctx.currentTime + 0.03);
 
-    this.gainstash = this.gainstash.filter(_ => _ !== gain);
+    this.#gainstash = this.#gainstash.filter(_ => _ !== gain);
 
     this.updateGains();
   }
@@ -113,21 +65,23 @@ export class AudioController {
   }
 
   #setFrequency({ frequency }) {
-    this.oscillator.frequency.value = frequency;
+    this.#oscillator.frequency.value = frequency;
 
     return frequency;
   }
 
-  get type() { return this.oscillator.type }
-  
+  get oscillatorTypes() { return ['sine', 'sawtooth', 'triangle'] }
+ 
+  get type() { return this.#oscillator.type }
+
   set type(v) {
-    this.oscillator.type = v
+    this.#oscillator.type = v;
   }
 
   setType({ type }) {
-    this.oscillator.type = type;
+    this.type = type;
 
-    return frequency;
+    return type;
   }
 
   changeNote(note, frequency) {
@@ -137,13 +91,13 @@ export class AudioController {
       this.played = false;
       this.playing = true;
 
-      return this.gain.connect(this.ctx.destination);
+      return this.#gain.connect(this.#ctx.destination);
     }
 
     if (this.playing) return 0;
 
-    this.osc.start(this.ctx.currentTime);
-    this.gain.connect(this.ctx.destination);
+    this.osc.start(this.#ctx.currentTime);
+    this.#gain.connect(this.#ctx.destination);
 
     this.playing = true;
   }
