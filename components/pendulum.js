@@ -26,12 +26,14 @@ export const dot = {
 
 
     this.sprite.setAttribute("transform", `translate(${p.x}, ${p.y})`);
-const frequency = 100 + p.y * 2;
+    const frequency = (100 + p.y) * 2;
+    
+    console.warn('p.y', p.y)
     if (this.audio) {
       this.audio.oscillator.frequency.value = frequency;
     }
-    
-    this.sprite .dispatchEvent(new CustomEvent('frequencychange', {bubbles: true, detail: {dotY: p.y, frequency }}))
+
+    // this.sprite.dispatchEvent(new CustomEvent('frequencychange', { bubbles: true, detail: { dotY: p.y, frequency } }))
   },
 };
 

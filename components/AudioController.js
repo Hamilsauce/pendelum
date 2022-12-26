@@ -2,32 +2,45 @@ export class AudioController {
   constructor() {
     this.played = false;
     this.playing = false;
+    this.#type = 'triangle';
+    this.controllers = [];
+    this.gainstash = []
 
     this.ctx = new AudioContext();
-    this.osc = this.ctx.createOscillator();
-
+    // this.oscillator = this.ctx.createOscillator({ type: this.type})
+    this.oscillator = this.ctx.createOscillator()
+    this.oscillator.type = this.type
     this.gain = this.ctx.createGain();
     this.gain.gain.value = 0.5;
-    this.osc.connect(this.gain)
-    this.controllers = [];
+    this.oscillator.connect(this.gain);
+    this.oscillator.frequency.value = 200;
+    this.playing = false;
 
-    this.gainstash = []
-    console.log(this);
+
+    this.gainstash.push(this.gain);
+    this.updateGains();
+    this.oscillator.start(this.ctx.currentTime);
+    this.oscillator.connect(this.gain);
+
+    this.play = () => {
+      this.gain.connect(this.ctx.destination);
+    }
+
+    this.setFrequency = this.#setFrequency.bind(this);
   }
 
   updateGains() {
     const val = 0.76 / this.gainstash.length
+
     this.gainstash.forEach((x, i) => {
       x.gain.exponentialRampToValueAtTime(val, this.ctx.currentTime + 0.05);
-      // x.gain.value = val
-      // x.disconnect()
     });
   }
 
 
   attachOscillator(obj) {
     const ctx = this.ctx
-    obj.audio = obj.audio ? obj.audio  : {}
+    obj.audio = obj.audio ? obj.audio : {}
     obj.audio.oscillator = ctx.createOscillator({ type: 'sawtooth' })
     obj.audio.oscillator.type = 'triangle'
     obj.audio.gain = ctx.createGain()
@@ -40,6 +53,7 @@ export class AudioController {
     this.updateGains()
     obj.audio.oscillator.start(ctx.currentTime);
     obj.audio.oscillator.connect(obj.audio.gain)
+
     obj.audio.play = () => {
       obj.audio.gain.connect(ctx.destination);
     }
@@ -52,19 +66,42 @@ export class AudioController {
     // obj.audio.stop = () => obj.audio.gain.disconnect();
   }
 
-  removeGain(gain) {
-    // gain.gain.value = 0
-    // gain.disconnect();
+  // #attachOscillatorToSelf(obj) {
+  //   const ctx = this.ctx
+  //   // this = this ? this : {}
+  //   this.oscillator = ctx.createOscillator({ type: 'sawtooth' })
+  //   this.oscillator.type = 'triangle'
+  //   this.gain = ctx.createGain()
+  //   this.oscillator.connect(this.gain);
 
+  //   this.osc.frequency.value = 200 //obj.frequency || 50 //* 2
+  //   this.playing = false;
+
+  //   this.gainstash.push(this.gain)
+  //   this.updateGains()
+  //   this.oscillator.start(ctx.currentTime);
+  //   this.oscillator.connect(this.gain)
+  //   this.play = () => {
+  //     this.gain.connect(ctx.destination);
+  //   }
+  //   this.stop = () => {
+  //     // this.gain.gain.value = 0
+  //     // this.gain.setValueAtTime(this.gain.value, ctx.currentTime);
+  //     this.gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
+
+  //   }
+  //   // obj.audio.stop = () => obj.audio.gain.disconnect();
+  // }
+
+  removeGain(gain) {
     // Important! Setting a scheduled parameter value
+
     // gain.gain.setValueAtTime(gain.gain.value, this.ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.03);
-    // gain.gain.setTargetAtTime(0, context.currentTime, 0.015);
 
-    this.gainstash = this.gainstash.filter(_ => _ !== gain)
-    console.log('gain', gain)
-    this.updateGains()
+    this.gainstash = this.gainstash.filter(_ => _ !== gain);
 
+    this.updateGains();
   }
 
   stop(gain) {
@@ -75,11 +112,31 @@ export class AudioController {
     }
   }
 
+  #setFrequency({ frequency }) {
+    this.oscillator.frequency.value = frequency;
+
+    return frequency;
+  }
+
+  get type() { return this.oscillator.type }
+  
+  set type(v) {
+    this.oscillator.type = v
+  }
+
+  setType({ type }) {
+    this.oscillator.type = type;
+
+    return frequency;
+  }
+
   changeNote(note, frequency) {
     this.osc.frequency.value = frequency;
+
     if (this.played) {
       this.played = false;
       this.playing = true;
+
       return this.gain.connect(this.ctx.destination);
     }
 
