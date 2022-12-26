@@ -42,4 +42,11 @@ function init() {
 window.onload = () => {
   dot.init('dot', 'curve');
   anim.start(durin.value);
+
+
+  dot.sprite.addEventListener('frequencychange', e => {
+    const { frequency } = e.detail
+    // console.warn({ frequency });
+  });
+
 }

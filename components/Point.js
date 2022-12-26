@@ -3,6 +3,5 @@ export class Point extends DOMPoint {
     super(x, y);
   }
 
-
   static create(x, y) { return new Point(x, y) }
 }

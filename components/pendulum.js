@@ -19,17 +19,19 @@ export const dot = {
 
     if (u >= 1) {
       this.dir = -this.dir;
-      console.warn('this.dir', this.dir);
+      // console.warn('this.dir', this.dir);
     }
 
     const p = this.track.getPointAtLength(spot);
 
 
     this.sprite.setAttribute("transform", `translate(${p.x}, ${p.y})`);
-
+const frequency = 100 + p.y * 2;
     if (this.audio) {
-      this.audio.oscillator.frequency.value = 100 + p.y * 2;
+      this.audio.oscillator.frequency.value = frequency;
     }
+    
+    this.sprite .dispatchEvent(new CustomEvent('frequencychange', {bubbles: true, detail: {dotY: p.y, frequency }}))
   },
 };
 

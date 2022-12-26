@@ -1,7 +1,6 @@
 import { draggable } from 'https://hamilsauce.github.io/hamhelper/draggable.js';
 import { Point } from './Point.js';
 import { SvgPath } from './SvgPath.js';
-// import { Dot } from './SvgPath.js';
 import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
 
 const { date, array, utils, text } = ham;
@@ -36,12 +35,6 @@ export class SvgCanvas {
     this.self.setAttribute('height', window.innerHeight)
     this.boundPost = this.post.bind(this)
 
-    // this.draggers = [...this.self.querySelectorAll('.draggable')]
-
-    // this.draggers.forEach(_ => {
-    //   draggable(this.self, _)
-    // })
-
     this.state = {
       objectRegistry: new Map(),
       eventPoint$: new Subject(),
@@ -61,13 +54,14 @@ export class SvgCanvas {
           .pipe(
             filter(_ => _.target.closest('.control-set')),
             tap(({ target, x, y }) => {
-              const value = this.domPoint.bind(this)(target, x, y)
+              const value = this.domPoint.bind(this)(target, x, y);
 
-              target.cx.baseVal.value = value.x
-              target.cy.baseVal.value = value.y
+              target.cx.baseVal.value = value.x;
+              target.cy.baseVal.value = value.y;
 
-              const pointType = target.classList.contains('path-vertex') ? 'vertex' : 'control'
-              const line = target.closest('.control-set').querySelector('.control-line')
+              const pointType = target.classList.contains('path-vertex') ? 'vertex' : 'control';
+              const line = target.closest('.control-set').querySelector('.control-line');
+              
               if (pointType === 'vertex') {
                 line.x2.baseVal.value = value.x
                 line.y2.baseVal.value = value.y
@@ -79,7 +73,6 @@ export class SvgCanvas {
               if (this.audio) {
                 this.audio.oscillator.frequency.value = value.y
               }
-
             }),
             map(({ target, x, y }) => ({
               [target.id]: this.domPoint(target, x, y)
@@ -101,7 +94,8 @@ export class SvgCanvas {
     this.surface = this.self.querySelector('#surface-layer');
 
     this.pathElement = this.self.querySelector('#curve');
-    this.pathModel = SvgPath.createPath(this.pathElement, this.pathPoints$)
+    
+    this.pathModel = SvgPath.createPath(this.pathElement, this.pathPoints$);
 
     this.pathData$ = this.pathModel.connect()
       .pipe(
@@ -109,13 +103,10 @@ export class SvgCanvas {
       );
 
     this.pathData$.subscribe();
-
-    console.warn('this.draggers', this.draggers)
   }
 
-
   update(x, y) {
-    this.audio.oscillator.frequency.value = y
+    this.audio.oscillator.frequency.value = y * 2;
   }
 
   post(data) {
@@ -125,7 +116,7 @@ export class SvgCanvas {
   getElementAtPoint(point) {}
 
   queryElements(selector, predicateFn) {
-    return this.elements.find(predicateFn)
+    return this.elements.find(predicateFn);
   }
 
   draw() {}
