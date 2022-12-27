@@ -48,8 +48,7 @@ export class SvgCanvas {
 
     this.eventResponses$ = new Subject();
 
-    this.pathPoints$ = this.pointerEvents$
-      .pipe(
+    this.pathPoints$ = this.pointerEvents$.pipe(
         mergeMap(group$ => group$
           .pipe(
             filter(_ => _.target.closest('.control-set')),
@@ -57,10 +56,10 @@ export class SvgCanvas {
             tap(({ target, x, y }) => {
               const value = this.domPoint.bind(this)(target, x, y);
 
+              // target = target.closest('.path-vertex')
               const pointType = target.classList.contains('path-vertex') ? 'vertex' : 'control';
               const line = target.closest('.control-set').querySelector('.control-line');
 
-              // target = target.closest('.control-set')
               // if (!this.isInViewport(target) && pointType === 'vertex') {
               //   target.cx.baseVal.value = target.cx.baseVal.value - 1
               //   target.cy.baseVal.value = target.cx.baseVal.value - 1
@@ -77,9 +76,9 @@ export class SvgCanvas {
                 line.y1.baseVal.value = value.y
               }
 
-              if (this.audio) {
-                this.audio.oscillator.frequency.value = value.y
-              }
+              // if (this.audio) {
+              //   this.audio.oscillator.frequency.value = value.y
+              // }
             }),
             map(({ target, x, y }) => ({
               [target.id]: this.domPoint(target, x, y)
@@ -134,20 +133,20 @@ export class SvgCanvas {
     );
   }
 
-  isInViewport(pointOrObject = new DOMPoint() || this.self) {
-    if ((pointOrObject.x && pointOrObject.y) && !(pointOrObject instanceof Element)) { //|| pointOrObject instanceof Point || pointOrObject instanceof DOMPoint) {
+  // isInViewport(pointOrObject = new DOMPoint() || this.self) {
+  //   if ((pointOrObject.x && pointOrObject.y) && !(pointOrObject instanceof Element)) { //|| pointOrObject instanceof Point || pointOrObject instanceof DOMPoint) {
 
-    }
+  //   }
 
-    else if (pointOrObject instanceof Element) {
-      const { top, bottom, left, right } = pointOrObject.getBoundingClientRect();
+  //   else if (pointOrObject instanceof Element) {
+  //     const { top, bottom, left, right } = pointOrObject.getBoundingClientRect();
 
-      return top >= this.viewport.top &&
-        bottom <= this.viewport.bottom &&
-        left >= this.viewport.left &&
-        right <= this.viewport.right;
-    }
-  }
+  //     return top >= this.viewport.top &&
+  //       bottom <= this.viewport.bottom &&
+  //       left >= this.viewport.left &&
+  //       right <= this.viewport.right;
+  //   }
+  // }
 
 
   get elements() {
@@ -163,5 +162,5 @@ export class SvgCanvas {
   static attachCanvas(el, options) { return new SvgCanvas(el, options || {}) }
 
   get children() { return [...this.self.children] };
-  get viewport() { return this.self.getBoundingClientRect() };
+  // get viewport() { return this.self.getBoundingClientRect() };
 }
