@@ -5,7 +5,7 @@ import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
 
 const { date, array, utils, text } = ham;
 
-const { combineLatest, forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of , fromEvent, merge, empty, delay, from } = rxjs;
+const { combineLatest, forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
 
@@ -53,15 +53,22 @@ export class SvgCanvas {
         mergeMap(group$ => group$
           .pipe(
             filter(_ => _.target.closest('.control-set')),
+            // filter(_ => this.isInViewport(_.target.closest('.control-set'))),
             tap(({ target, x, y }) => {
               const value = this.domPoint.bind(this)(target, x, y);
 
-              target.cx.baseVal.value = value.x;
-              target.cy.baseVal.value = value.y;
-
               const pointType = target.classList.contains('path-vertex') ? 'vertex' : 'control';
               const line = target.closest('.control-set').querySelector('.control-line');
-              
+
+              // target = target.closest('.control-set')
+              // if (!this.isInViewport(target) && pointType === 'vertex') {
+              //   target.cx.baseVal.value = target.cx.baseVal.value - 1
+              //   target.cy.baseVal.value = target.cx.baseVal.value - 1
+              //   return
+              // }
+
+
+
               if (pointType === 'vertex') {
                 line.x2.baseVal.value = value.x
                 line.y2.baseVal.value = value.y
@@ -94,7 +101,7 @@ export class SvgCanvas {
     this.surface = this.self.querySelector('#surface-layer');
 
     this.pathElement = this.self.querySelector('#curve');
-    
+
     this.pathModel = SvgPath.createPath(this.pathElement, this.pathPoints$);
 
     this.pathData$ = this.pathModel.connect()
@@ -127,6 +134,22 @@ export class SvgCanvas {
     );
   }
 
+  isInViewport(pointOrObject = new DOMPoint() || this.self) {
+    if ((pointOrObject.x && pointOrObject.y) && !(pointOrObject instanceof Element)) { //|| pointOrObject instanceof Point || pointOrObject instanceof DOMPoint) {
+
+    }
+
+    else if (pointOrObject instanceof Element) {
+      const { top, bottom, left, right } = pointOrObject.getBoundingClientRect();
+
+      return top >= this.viewport.top &&
+        bottom <= this.viewport.bottom &&
+        left >= this.viewport.left &&
+        right <= this.viewport.right;
+    }
+  }
+
+
   get elements() {
     return [...this.objectRegistry.keys()]
   }
@@ -140,4 +163,5 @@ export class SvgCanvas {
   static attachCanvas(el, options) { return new SvgCanvas(el, options || {}) }
 
   get children() { return [...this.self.children] };
+  get viewport() { return this.self.getBoundingClientRect() };
 }

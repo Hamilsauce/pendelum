@@ -15,7 +15,8 @@ export class AudioController {
     this.#ctx = new AudioContext();
 
     this.#oscillator = this.#ctx.createOscillator()
-    this.#oscillator.type = this.type
+    // this.#oscillator.type =
+    this.type = 'triangle'
 
     this.#gain = this.#ctx.createGain();
 
