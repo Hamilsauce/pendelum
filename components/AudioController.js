@@ -3,9 +3,9 @@ export class AudioController {
   #oscillator = null;
   #gain = null;
   #ctx = null;
-  #gainstash= [];
-  #controllers= [];
-  
+  #gainstash = [];
+  #controllers = [];
+
   constructor() {
     this.played = false;
     this.playing = false;
@@ -13,28 +13,35 @@ export class AudioController {
     this.#gainstash = []
 
     this.#ctx = new AudioContext();
-    
+
     this.#oscillator = this.#ctx.createOscillator()
     this.#oscillator.type = this.type
-    
+
     this.#gain = this.#ctx.createGain();
-   
+
     this.#gain.gain.value = 0.5;
     this.#oscillator.frequency.value = 200;
     this.#oscillator.connect(this.#gain);
-  
+
 
     this.#gainstash.push(this.#gain);
     this.updateGains();
-   
-    this.#oscillator.start(this.#ctx.currentTime);
-    this.#oscillator.connect(this.#gain);
 
-    this.play = () => {
-      this.#gain.connect(this.#ctx.destination);
-    };
+
+    // this.play = () => {
+    //   this.#oscillator.start(this.#ctx.currentTime);
+    //   this.#oscillator.connect(this.#gain);
+    //   this.#gain.connect(this.#ctx.destination);
+    // };
+    
 
     this.setFrequency = this.#setFrequency.bind(this);
+  }
+
+  play() {
+    this.#oscillator.start(this.#ctx.currentTime);
+    this.#oscillator.connect(this.#gain);
+    this.#gain.connect(this.#ctx.destination);
   }
 
   updateGains() {
@@ -71,7 +78,7 @@ export class AudioController {
   }
 
   get oscillatorTypes() { return ['sine', 'sawtooth', 'triangle'] }
- 
+
   get type() { return this.#oscillator.type }
 
   set type(v) {

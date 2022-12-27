@@ -1,3 +1,13 @@
+/* 
+var(--accent-white40);
+*/
+
+:root {
+  --primary: #283038;
+  --accent-white: #F3F3F3;
+  --accent-white40: #FEF3F340;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -24,11 +34,41 @@ body {
   width: 100%;
   height: 100%;
   margin: auto;
-  background: #283038;
-  color: #F3F3F3;
+  background: var(--primary);
+  color: var(--accent-white);
   font-size: 18px;
-
   overflow: hidden;
+}
+
+#start-prompt {
+  position: absolute;
+  top: 17.5%;
+  left: 13.5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  width: 300px;
+  height: 300px;
+  background: #FFFFFF10;
+  /* background: #00000020; */
+  z-index: 500;
+  box-shadow: 0 2px 12px 2px #00000070;
+  backdrop-filter:  invert(1) opacity(0.7) blur(2px);
+  /* border: 2px solid #EDEDED50; */
+  border-radius: 6px;
+}
+
+#start-button {
+  padding: 10px 24px;
+  font-size: 22px;
+  font-weight: 700;
+  border: 1px solid var(--accent-white40);
+  border-radius: 8px;
+  background: var(--primary);
+  color: var(--accent-white);
+  text-transform: uppercase;
 }
 
 #app-header {
@@ -44,7 +84,7 @@ body {
 #app-header-top {
   width: 100%;
   height: 100%;
-  color: #F0F0F040;
+  color: var(--accent-white40);
   letter-spacing: 18.5px;
   line-height: 0.8;
   text-transform: uppercase;
@@ -69,12 +109,11 @@ body {
 .control-group {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
   justify-content: center;
   align-items: center;
   gap: 12px;
   color: #F0F0F0C9;
-  border: 1px solid #F0F0F03D;
+  border: 1px solid var(--accent-white40);
   padding: 2px 4px;
   border-radius: 6px;
 }
@@ -82,7 +121,7 @@ body {
 #oscillator-input {
   padding: 4px 6px;
   background: none;
-  color: #F3F3F3;
+  color: var(--accent-white);
   font-size: 15px;
   text-align: center;
   border: none;
@@ -94,7 +133,7 @@ body {
   padding: 4px;
   background: none;
   font-size: 15px;
-  color: #F3F3F3;
+  color: var(--accent-white);
   border: none;
   border-left: 1px solid #F0F0F03D;
   padding: 4px 6px;
@@ -123,8 +162,9 @@ body {
   align-content: center;
   overflow-y: hidden;
   padding: 8px;
-  color: #F0F0F06B;
-  letter-spacing: 1.5px;
+  color: var(--accent-white);
+  filter: opacity(0.3);
+  letter-spacing: 1.75px;
   font-weight: 300;
   font-size: 14px;
 }
@@ -154,4 +194,5 @@ svg {
   fill: #F7F7F7;
   stroke: #FFFFFF;
   stroke-width: 2px;
+  pointer-events: none;
 }

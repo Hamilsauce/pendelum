@@ -10,6 +10,7 @@ const audio = new AudioController();
 
 const app = document.querySelector('#app');
 const appBody = document.querySelector('#app-body');
+const startButton = document.querySelector('#start-button');
 const canvas = document.querySelector('#canvas');
 const durationInput = document.querySelector('#duration-input');
 const oscillatorSelect = document.querySelector('#oscillator-input');
@@ -18,6 +19,11 @@ canvas.setAttribute('height', canvas.parentElement.getBoundingClientRect().heigh
 
 
 durationInput.value = 1000;
+
+startButton.addEventListener('click', e => {
+  audio.play();
+startButton.parentElement.remove();
+});
 
 durationInput.addEventListener('change', e => {
   anim.duration = +durationInput.value;
@@ -33,7 +39,6 @@ let frequency$;
 window.onload = () => {
   frequency$ = dot.init('dot', 'curve');
 
-  audio.play();
   dot.frequency$
     .pipe(
       map(x => x),
