@@ -49,44 +49,38 @@ export class SvgCanvas {
     this.eventResponses$ = new Subject();
 
     this.pathPoints$ = this.pointerEvents$.pipe(
-        mergeMap(group$ => group$
-          .pipe(
-            filter(_ => _.target.closest('.control-set')),
-            // filter(_ => this.isInViewport(_.target.closest('.control-set'))),
-            tap(({ target, x, y }) => {
-              const value = this.domPoint.bind(this)(target, x, y);
+      mergeMap(group$ => group$
+        .pipe(
+          filter(_ => _.target.closest('.control-set')),
+          // filter(_ => this.isInViewport(_.target.closest('.control-set'))),
+          tap(({ target, x, y }) => {
+            const value = this.domPoint.bind(this)(target, x, y);
 
-              // target = target.closest('.path-vertex')
-              const pointType = target.classList.contains('path-vertex') ? 'vertex' : 'control';
-              const line = target.closest('.control-set').querySelector('.control-line');
+            const pointType = target.classList.contains('path-vertex') ? 'vertex' : 'control';
+            const line = target.closest('.control-set').querySelector('.control-line');
 
-              // if (!this.isInViewport(target) && pointType === 'vertex') {
-              //   target.cx.baseVal.value = target.cx.baseVal.value - 1
-              //   target.cy.baseVal.value = target.cx.baseVal.value - 1
-              //   return
-              // }
+            // if (!this.isInViewport(target) && pointType === 'vertex') {
+            //   return
+            // }
+            
+            target.cx.baseVal.value = value.x;
+            target.cy.baseVal.value = value.y;
 
-
-
-              if (pointType === 'vertex') {
-                line.x2.baseVal.value = value.x
-                line.y2.baseVal.value = value.y
-              } else {
-                line.x1.baseVal.value = value.x
-                line.y1.baseVal.value = value.y
-              }
-
-              // if (this.audio) {
-              //   this.audio.oscillator.frequency.value = value.y
-              // }
-            }),
-            map(({ target, x, y }) => ({
+            if (pointType === 'vertex') {
+              line.x2.baseVal.value = value.x
+              line.y2.baseVal.value = value.y
+            } else {
+              line.x1.baseVal.value = value.x
+              line.y1.baseVal.value = value.y
+            }
+          }),
+          map(({ target, x, y }) => ({
               [target.id]: this.domPoint(target, x, y)
-            })),
-          )
-        ),
-        scan((inputDict, input) => ({ ...inputDict, ...input })),
-      )
+          })),
+        )
+      ),
+      scan((inputDict, input) => ({ ...inputDict, ...input })),
+    )
 
     this.eventChannel = {
       events$: this.state.eventPoint$.pipe(map(e => ({ x: e.pageX, y: e.pageY }))),

@@ -23,10 +23,8 @@ const canvasEl = document.querySelector('#canvas');
 const durationInput = document.querySelector('#duration-input');
 const oscillatorSelect = document.querySelector('#oscillator-input');
 
-console.log('suk');
-
-// canvasEl.setAttribute('height', canvasEl.parentElement.getBoundingClientRect().height)
 const bodyBb = appBody.getBoundingClientRect()
+
 startPrompt.style.left = `${(bodyBb.width / 2) - (startPrompt.getBoundingClientRect().width/2)}px`
 
 durationInput.value = 1000;
