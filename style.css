@@ -198,3 +198,9 @@ svg {
   stroke-width: 2px;
   /* pointer-events: none; */
 }
+#dot2 {
+  fill: #2D36D700;
+  stroke: #FFFFFF;
+  stroke-width: 2px;
+  /* pointer-events: none; */
+}

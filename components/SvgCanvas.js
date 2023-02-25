@@ -33,18 +33,17 @@ export class SvgCanvas {
     this.self = el;
     this.self.setAttribute('width', window.innerWidth)
     this.self.setAttribute('height', window.innerHeight)
-    this.boundPost = this.post.bind(this)
+    this.boundPost = this.post.bind(this);
 
     this.state = {
       objectRegistry: new Map(),
       eventPoint$: new Subject(),
     };
 
-    this.pointerEvents$ = fromEvent(this.self, 'pointermove')
-      .pipe(
-        map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
-        groupBy(_ => _.target.id),
-      );
+    this.pointerEvents$ = fromEvent(this.self, 'pointermove').pipe(
+      map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
+      groupBy(_ => _.target.id),
+    );
 
     this.eventResponses$ = new Subject();
 
@@ -52,17 +51,12 @@ export class SvgCanvas {
       mergeMap(group$ => group$
         .pipe(
           filter(_ => _.target.closest('.control-set')),
-          // filter(_ => this.isInViewport(_.target.closest('.control-set'))),
           tap(({ target, x, y }) => {
             const value = this.domPoint.bind(this)(target, x, y);
 
             const pointType = target.classList.contains('path-vertex') ? 'vertex' : 'control';
             const line = target.closest('.control-set').querySelector('.control-line');
 
-            // if (!this.isInViewport(target) && pointType === 'vertex') {
-            //   return
-            // }
-            
             target.cx.baseVal.value = value.x;
             target.cy.baseVal.value = value.y;
 
@@ -75,7 +69,7 @@ export class SvgCanvas {
             }
           }),
           map(({ target, x, y }) => ({
-              [target.id]: this.domPoint(target, x, y)
+            [target.id]: this.domPoint(target, x, y)
           })),
         )
       ),
@@ -105,6 +99,17 @@ export class SvgCanvas {
     this.pathData$.subscribe();
   }
 
+
+  get elements() { return [...this.objectRegistry.keys()] }
+
+  get objectRegistry() { return this.state.objectRegistry }
+
+  get children() { return [...this.self.children] };
+
+  static createCanvas(options) { return new SvgCanvas(document.createElement('svg'), options || {}) }
+
+  static attachCanvas(el, options) { return new SvgCanvas(el, options || {}) }
+
   update(x, y) {
     this.audio.oscillator.frequency.value = y * 2;
   }
@@ -126,35 +131,4 @@ export class SvgCanvas {
       element.getScreenCTM().inverse()
     );
   }
-
-  // isInViewport(pointOrObject = new DOMPoint() || this.self) {
-  //   if ((pointOrObject.x && pointOrObject.y) && !(pointOrObject instanceof Element)) { //|| pointOrObject instanceof Point || pointOrObject instanceof DOMPoint) {
-
-  //   }
-
-  //   else if (pointOrObject instanceof Element) {
-  //     const { top, bottom, left, right } = pointOrObject.getBoundingClientRect();
-
-  //     return top >= this.viewport.top &&
-  //       bottom <= this.viewport.bottom &&
-  //       left >= this.viewport.left &&
-  //       right <= this.viewport.right;
-  //   }
-  // }
-
-
-  get elements() {
-    return [...this.objectRegistry.keys()]
-  }
-
-  get objectRegistry() {
-    return this.state.objectRegistry
-  }
-
-  static createCanvas(options) { return new SvgCanvas(document.createElement('svg'), options || {}) }
-
-  static attachCanvas(el, options) { return new SvgCanvas(el, options || {}) }
-
-  get children() { return [...this.self.children] };
-  // get viewport() { return this.self.getBoundingClientRect() };
 }
