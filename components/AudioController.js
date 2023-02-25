@@ -91,6 +91,10 @@ export class AudioController {
 
     return type;
   }
+ 
+  setParams(paramMap) {
+    Object.assign(this, paramMap);
+  }
 
   changeNote(note, frequency) {
     this.osc.frequency.value = frequency;
