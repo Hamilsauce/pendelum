@@ -1,4 +1,7 @@
 import { AudioController } from './components/AudioController.js'
+import { noteDataSets } from './data/data.js';
+
+import { roundTwo, coerce } from './lib/utils.js';
 import {
   anim,
   dot,
@@ -10,12 +13,14 @@ const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, inter
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
 
-const coerce = (value) => {
-  return !isNaN(+value) ? +value : ['true', 'false'].includes(value) ? Boolean(value) : value;
-}
+console.log('noteDataSets.frequencyMap', [...noteDataSets.frequencyMap])
+
 
 export class App {
   self = document.querySelector('#app');
+  header = document.querySelector('#app-header');
+  frequencyDisplay = document.querySelector('#frequency-value');
+  noteDisplay = document.querySelector('#note-value');
   body = document.querySelector('#app-body');
   startPrompt = document.querySelector('#start-prompt');
   startButton = document.querySelector('#start-button');
@@ -29,7 +34,8 @@ export class App {
 
     this.params.duration.value = coerce(this.params.duration.value);
 
-    this.startPrompt.style.left = `${(this.width / 2) - (this.startPrompt.getBoundingClientRect().width/2)}px`
+    this.startPrompt.style.top = `${(this.body.getBoundingClientRect().top) + 40}px`
+    this.startPrompt.style.left = `${(this.width / 2) - (this.startPrompt.getBoundingClientRect().width / 2)}px`
 
 
     console.log('this.startButton', this.#onStart)
@@ -37,8 +43,6 @@ export class App {
 
     this.startButton.addEventListener('click', this.onStart);
     this.self.addEventListener('change', this.onParamChange);
-
-
   }
 
   get params() {
@@ -79,16 +83,32 @@ export class App {
   #onStart(e) {
     this.audio.play();
     this.startPrompt.remove();
-    console.log('start xlick');
+
     this.frequency$ = dot.init('dot', 'curve');
 
     dot.frequency$.pipe(
-      map(x => x),
       map(this.audio.setFrequency),
+      tap(freq => {
+        const truncFreq = Math.trunc(freq)
+        const note = noteDataSets.frequencyMap.get(truncFreq)
+
+        if (note) {
+          this.frequencyDisplay.textContent = truncFreq
+          this.noteDisplay.textContent = note.pitch;
+        } else {
+          this.noteDisplay.textContent = this.noteDisplay.textContent
+          this.frequencyDisplay.textContent = this.frequencyDisplay.textContent
+        }
+      }),
       // map(({ frequency }) => osc.frequency.value = (frequency + 100) * 2),
     ).subscribe();
 
     anim.start(+this.params.duration.value);
+
+    // setTimeout(() => {
+    //   dot.stop()
+    //   console.log(' ', );
+    // }, 2230)
   }
 
   #onParamChange(e) {

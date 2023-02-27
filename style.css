@@ -41,6 +41,7 @@ body {
   overflow: hidden;
 }
 
+
 #start-prompt {
   position: absolute;
   top: 17.5%;
@@ -56,7 +57,7 @@ body {
   /* background: #00000020; */
   z-index: 500;
   box-shadow: 0 2px 12px 2px #00000070;
-  backdrop-filter:  invert(1) opacity(0.7) blur(2px);
+  backdrop-filter: invert(1) opacity(0.7) blur(2px);
   border-radius: 6px;
 }
 
@@ -79,31 +80,49 @@ body {
   align-items: center;
   gap: 8px;
   padding: 8px;
+  overflow: hidden;
 }
 
-#app-header-top {
-  width: 100%;
-  height: 100%;
-  color: var(--accent-white40);
-  letter-spacing: 18.5px;
-  line-height: 0.8;
-  text-transform: uppercase;
-  font-weight: 300;
-  font-size: 14px;
-  text-align: center;
-  padding: 4px 4px 8px;
-  white-space: nowrap;
-}
-
-#app-header-bottom {
+.app-header-row {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   gap: 8px;
   width: 100%;
   height: 100%;
-  padding: 8px;
+  padding: 0px 8px 0px;
+  /* padding: 8px; */
+}
+
+
+#app-header-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  width: 100%;
+  height: 100%;
+  color: var(--accent-white40);
+  letter-spacing: 12px;
+  /* line-height: 0.8; */
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 12px;
+  text-align: center;
+  padding: 0px 8px 8px;
+  white-space: nowrap;
+}
+
+#app-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  width: 100%;
+  height: 100%;
 }
 
 .control-group {
@@ -116,6 +135,34 @@ body {
   border: 1px solid var(--accent-white40);
   padding: 2px 4px;
   border-radius: 6px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  color: #F0F0F0C9;
+  /* border: 1px solid var(--accent-white40); */
+  padding: 2px 4px;
+  /* border-radius: 6px; */
+}
+
+#pitch-values {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 4px;
+  color: #F0F0F0C9;
+  /* border: 1px solid var(--accent-white40); */
+  padding: 2px 4px;
+  /* border-radius: 6px; */
+}
+
+#pitch-values>div {
+  width: 40px;
 }
 
 #oscillator-input {
@@ -148,7 +195,7 @@ body {
   gap: 0px;
   width: 100%;
   height: 100%;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 #app-footer {
@@ -192,12 +239,21 @@ svg {
   fill: #D13D3D;
 }
 
+.frequency-dot {
+  fill: #F7F7F7;
+  stroke: #FFFFFF;
+  stroke-width: 2px;
+  pointer-events: none;
+}
+
 #dot {
   fill: #F7F7F7;
   stroke: #FFFFFF;
   stroke-width: 2px;
-  /* pointer-events: none; */
+  pointer-events: none;
 }
+
+
 #dot2 {
   fill: #2D36D700;
   stroke: #FFFFFF;

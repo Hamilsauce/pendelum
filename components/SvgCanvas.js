@@ -6,7 +6,7 @@ import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
 const { date, array, utils, text } = ham;
 
 const { combineLatest, forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
-const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
+const { sampleTime, flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -50,7 +50,22 @@ export class SvgCanvas {
     this.pathPoints$ = this.pointerEvents$.pipe(
       mergeMap(group$ => group$
         .pipe(
+          // sampleTime(40),
           filter(_ => _.target.closest('.control-set')),
+          // scan((prev, { target, x, y }) => {
+          //   const pt = this.domPoint.bind(this)(target, x, y)
+          //   const prevPt = this.domPoint.bind(this)(prev.target, prev.x, prev.y)
+          //   const xDist = Math.abs(pt.x - prevPt.x)
+          //   const yDist = Math.abs(pt.y - prevPt.y)
+
+          //   const newPoint = {
+          //     x: xDist >= 5 ? x + 5 : prev.x,
+          //     y: yDist >= 5 ? y + 5 : prev.y
+          //   }
+
+          //   return { ...newPoint, target }
+          //   // return xDist >= 10 || yDist >= 10 ? { target, x, y } : prev
+          // }),
           tap(({ target, x, y }) => {
             const value = this.domPoint.bind(this)(target, x, y);
 

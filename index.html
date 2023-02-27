@@ -11,15 +11,16 @@
   <title>Pendulum Synth</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.3.0/rxjs.umd.min.js" integrity="sha512-y3JTS47nnpKORJX8Jn1Rlm+QgRIIZHtu3hWxal0e81avPrqUH48yk+aCi+gprT0RMAcpYa0WCkapxe+bpBHD6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./css/util.css" />
 </head>
 
 <body>
   <div id="app">
     <header id="app-header">
-      <div id="app-header-top">
-        <h3>Pendulum Synth</h3>
+      <div class="app-header-row" id="app-header-top">
+        <h3 id="app-title">Pendulum Synth</h3>
       </div>
-      <div id="app-header-bottom">
+      <div class="app-header-row">
         <div class="control-group">
           <label for="duration-input">Duration</label>
           <input type="text" name="duration-input" id="duration-input" data-param="duration" value="1000">
@@ -33,14 +34,21 @@
           </select>
         </div>
       </div>
+      <div class="app-header-row flex-end">
+        <div id="pitch-values" class="field-group">
+          <div id="note-value" class="field-group-value">0</div>
+          <div id="frequency-value" class="field-group-value">0</div>
+        </div>
+      </div>
     </header>
-    <div id="app-body">
-     
+
+    <section id="app-body">
+
       <section id="start-prompt">
         <button id="start-button" data-action="start">Start</button>
       </section>
-      
-      <svg id="canvas" width="384" height="722" viewBox="-50 -50 100 200" _preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+      <svg id="canvas" width="0" height="0" viewBox="-50 -50 100 200" _preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs>
           <pattern id="smallGrid" width="2.5" height="2.5" patternUnits="userSpaceOnUse">
             <path id="smallGridPath" d="M 2.5 0 H 0 V 2.5" fill="none" stroke="#C9C9C950" stroke-width="0.1" />
@@ -55,10 +63,21 @@
           <marker id="triangleend" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
             <path d="M 0 0 L 10 5 L 0 10 z" />
           </marker>
+
+          <circle id="pendulum-dot-template" class="frequency-dot" cx="0" cy="0" r="2.5" fill="#FFFFFF50" />
+
+          <path class="pendulum-arc" id="pendulum-arc-template" d=" M -25,25 C -25,-25 25,-25 25,25" />
+
+          <g class="shape-container" id="fuck" data-layer="objects" transform="translate(0,0) scale(1)">
+            <circle class="container-background" cx="0" cy="0" r="5" fill="#FFFFFF50" />
+          </g>
+
         </defs>
+
         <g class="scene" id="scene" transform="translate(-0,-0)" x="0" y="0">
-          <g class="layer" id="surface-layer" data-layer="surface" transform="translate(-0,-0)" x="0" y="0" width="384" height="722">
-            <rect transform="translate(-200,-400)" id="grid" x="0" y="0" width="384" height="722" fill="url(#largeGrid)" />
+
+          <g class="layer" id="surface-layer" data-layer="surface" transform="translate(-0,-0)" x="0" y="0" width="412" height="722">
+            <rect transform="translate(-200,-400)" id="grid" x="0" y="0" width="412" height="722" fill="url(#largeGrid)" />
             <g id="axes" transform="translate(-0,-0)">
               <line id="xaxis" class="axis" x1="-1000" x2="1000" y1="0" y2="0" stroke="#FFFFFF50" stroke-width="0.35"></line>
               <line id="yaxis" class="axis" x1="0" x2="0" y1="-1000" y2="1000" stroke="#FFFFFF50" stroke-width="0.35"></line>
@@ -66,9 +85,6 @@
           </g>
 
           <g class="layer" id="objects-layer" data-layer="objects" transform="translate(0,-0)">
-            <g class="shape-container" id="" data-layer="objects" transform="translate(0,0) scale(1)">
-              <circle class="container-background" cx="0" cy="0" r="5" fill="#FFFFFF50" />
-            </g>
 
             <g class="shape-container" id="squiggly-container" data-selected="false" data-layer="objects" transform="translate(0,0) scale(1)">
               <path class="curve" id="curve" d=" M -25,25 C -25,-25 25,-25 25,25" />
@@ -85,12 +101,13 @@
                 <circle id="controlB" class="control-point _draggable" cx="25" cy="-25" r="5" fill="purple" stroke="#FFFFFF90" />
               </g>
             </g>
+
             <circle id="dot" class="container-background" cx="0" cy="0" r="2.5" fill="#FFFFFF50" />
             <!-- <circle id="dot2" class="container-background" cx="0" cy="0" r="2.5" fill="#FFFFFF50" /> -->
           </g>
         </g>
       </svg>
-    </div>
+    </section>
     <footer id="app-footer">
       <div class="container">
         HAMILSAUCE 2022
