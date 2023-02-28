@@ -23,11 +23,13 @@ export class OscillatorDot extends OscillatorNode {
 
   constructor(context, options = OscillatorDotOptions) {
     super(context, options.OscillatorOptions);
+    this.#self = document.getElementById(spriteSelector);
 
     this.#direction = initDir;
   
     this.#frequencySubject$ = new BehaviorSubject({ frequency: 150 })
     this.#frequency$ = this.#frequencySubject$.asObservable();
+  
     this.#positionSubject$ = new BehaviorSubject(0).pipe(
       map(this.getPointOnTrack.bind(this)),
       map(this.translateToPoint.bind(this)),
@@ -46,23 +48,23 @@ export class OscillatorDot extends OscillatorNode {
     return this.frequency$
   }
 
-  getPointOnTrack(u) {
-    let spot;
+  // getPointOnTrack(u) {
+  //   let spot;
 
-    if (this.#direction > 0) {
-      spot = this.#track.getTotalLength() - (u * this.#track.getTotalLength());
-    }
+  //   if (this.#direction > 0) {
+  //     spot = this.#track.getTotalLength() - (u * this.#track.getTotalLength());
+  //   }
 
-    else spot = (u * this.#track.getTotalLength());
+  //   else spot = (u * this.#track.getTotalLength());
 
-    if (u >= 1) {
-      this.#direction = -this.#direction;
-    }
+  //   if (u >= 1) {
+  //     this.#direction = -this.#direction;
+  //   }
 
-    const p = this.#track.getPointAtLength(spot);
+  //   const p = this.#track.getPointAtLength(spot);
 
-    return p;
-  }
+  //   return p;
+  // }
 
   translateToPoint(pt = new DOMPoint()) {
     this.#sprite.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);

@@ -29,6 +29,9 @@ const createText = (value, parent) => {
 
 
 export class SvgCanvas {
+  #dir;
+  #track;
+  #sprite;
   constructor(el, options = {}) {
     this.self = el;
     this.self.setAttribute('width', window.innerWidth)
@@ -89,6 +92,7 @@ export class SvgCanvas {
         )
       ),
       scan((inputDict, input) => ({ ...inputDict, ...input })),
+      // tap(x => console.warn('POINTS: ', x)),
     )
 
     this.eventChannel = {
@@ -124,6 +128,32 @@ export class SvgCanvas {
   static createCanvas(options) { return new SvgCanvas(document.createElement('svg'), options || {}) }
 
   static attachCanvas(el, options) { return new SvgCanvas(el, options || {}) }
+
+  getPointOnTrack(u) {
+    let spot;
+
+    if (this.#dir > 0) {
+      spot = this.#track.getTotalLength() - (u * this.#track.getTotalLength());
+    }
+
+    else spot = (u * this.#track.getTotalLength());
+
+    if (u >= 1) {
+      this.#dir = -this.#dir;
+    }
+
+    const p = this.#track.getPointAtLength(spot);
+    // console.log('p', p)
+
+    return p;
+  }
+
+  translateToPoint(pt = new DOMPoint()) {
+    this.#sprite.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+
+    return pt;
+  }
+
 
   update(x, y) {
     this.audio.oscillator.frequency.value = y * 2;

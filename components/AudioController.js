@@ -24,17 +24,16 @@ export class AudioController {
     this.#oscillator.frequency.value = 200;
     this.#oscillator.connect(this.#gain);
 
-
     this.#gainstash.push(this.#gain);
+   
     this.updateGains();
-
 
     // this.play = () => {
     //   this.#oscillator.start(this.#ctx.currentTime);
     //   this.#oscillator.connect(this.#gain);
     //   this.#gain.connect(this.#ctx.destination);
     // };
-    
+
 
     this.setFrequency = this.#setFrequency.bind(this);
   }
@@ -43,6 +42,7 @@ export class AudioController {
     this.#oscillator.start(this.#ctx.currentTime);
     this.#oscillator.connect(this.#gain);
     this.#gain.connect(this.#ctx.destination);
+      this.playing = true;
   }
 
   updateGains() {
@@ -62,6 +62,16 @@ export class AudioController {
     this.#gainstash = this.#gainstash.filter(_ => _ !== gain);
 
     this.updateGains();
+  }
+
+  resume() {
+    this.#ctx.resume()
+      this.playing = true;
+  }
+  
+  suspend() {
+    this.#ctx.suspend()
+      this.playing = false;
   }
 
   stop(gain) {
@@ -91,7 +101,7 @@ export class AudioController {
 
     return type;
   }
- 
+
   setParams(paramMap) {
     Object.assign(this, paramMap);
   }
@@ -110,7 +120,6 @@ export class AudioController {
 
     this.osc.start(this.#ctx.currentTime);
     this.#gain.connect(this.#ctx.destination);
-
     this.playing = true;
   }
 }

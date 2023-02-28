@@ -1,6 +1,6 @@
 import { AudioController } from './components/AudioController.js'
 import { noteDataSets } from './data/data.js';
-
+import { PlaybackButton } from './components/PlaybackButton.js';
 import { roundTwo, coerce } from './lib/utils.js';
 import {
   anim,
@@ -13,8 +13,10 @@ const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, inter
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
 
-console.log('noteDataSets.frequencyMap', [...noteDataSets.frequencyMap])
+const pbButton = new PlaybackButton();
 
+const playbackControls = document.querySelector('#playback-controls');
+playbackControls.append(pbButton.dom);
 
 export class App {
   self = document.querySelector('#app');
@@ -26,23 +28,18 @@ export class App {
   startButton = document.querySelector('#start-button');
   audio = new AudioController();
 
-
   constructor() {
+    this.onPlaybackChange = this.#onPlaybackChange.bind(this);
     this.onParamChange = this.#onParamChange.bind(this);
     this.onStart = this.#onStart.bind(this);
 
-
     this.params.duration.value = coerce(this.params.duration.value);
 
-    this.startPrompt.style.top = `${(this.body.getBoundingClientRect().top) + 40}px`
     this.startPrompt.style.left = `${(this.width / 2) - (this.startPrompt.getBoundingClientRect().width / 2)}px`
-
-
-    console.log('this.startButton', this.#onStart)
-
 
     this.startButton.addEventListener('click', this.onStart);
     this.self.addEventListener('change', this.onParamChange);
+    pbButton.dom.addEventListener('click', this.onPlaybackChange);
   }
 
   get params() {
@@ -55,30 +52,6 @@ export class App {
   get width() { return this.self.getBoundingClientRect().width }
 
   get height() { return this.self.getBoundingClientRect().height }
-
-  // init({ duration = 1000 }) {
-  //   this.params.duration.value = duration;
-
-  //   this.startPrompt.style.left = `${(this.width / 2) - (this.startPrompt.getBoundingClientRect().width/2)}px`
-
-  //   this.startButton.addEventListener('click', e => {
-  //     audio.play();
-  //     this.startPrompt.remove();
-  //   });
-  // }
-
-  // #onParamChange(e) {
-  //   const input = e.target.closest('[data-param]');
-
-  //   if (input) {
-  //     const param = input.dataset.param;
-  //     const value = coerce(input.value);
-
-  //     this.audio.setParams({
-  //       [param]: value
-  //     });
-  //   }
-  // }
 
   #onStart(e) {
     this.audio.play();
@@ -104,14 +77,36 @@ export class App {
     ).subscribe();
 
     anim.start(+this.params.duration.value);
-
-    // setTimeout(() => {
-    //   dot.stop()
-    //   console.log(' ', );
-    // }, 2230)
   }
 
   #onParamChange(e) {
+    const input = e.target.closest('[data-param]');
+
+    if (input && input.dataset.param === 'duration') {
+      const param = input.dataset.param;
+      const value = coerce(input.value);
+
+      anim.duration = value;
+    }
+
+    else if (input && input.dataset.param === 'oscillator') {
+      const param = input.dataset.param;
+      const value = coerce(input.value);
+
+      this.audio.setType({ type: value });
+    }
+  }
+
+  #onPlaybackChange(e) {
+    if (this.audio.playing) {
+      this.audio.suspend();
+      anim.stop();
+    }
+    else {
+      this.audio.resume();
+      anim.start();
+    }
+    
     const input = e.target.closest('[data-param]');
 
     if (input && input.dataset.param === 'duration') {

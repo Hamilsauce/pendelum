@@ -1,6 +1,6 @@
 import { Point } from './Point.js';
 
-const { forkJoin, asObservable, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of , fromEvent, merge, empty, delay, from } = rxjs;
+const { forkJoin, asObservable, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
 
@@ -27,7 +27,6 @@ export class SvgPath {
     this.self = pathElement;
     this.input$ = input$;
 
-   
     this.inputSubscription = this.input$
       .pipe(
         tap(x => this.#data$.next(x))
@@ -56,6 +55,10 @@ export class SvgPath {
   }
 
   get boundingBox() {
+    return this.self.getBoundingClientRect();
+  }
+
+  get middlePoint() {
     return this.self.getBoundingClientRect();
   }
 
@@ -112,14 +115,14 @@ export class SvgPath {
   // Elliptical() { 'Arc Curve: A, a' }
   // ClosePath() { ' Z, z' }
 
-  domPoint( x, y) {
+  domPoint(x, y) {
     return new DOMPoint(x, y).matrixTransform(
       this.self.ownerSVGElement.getScreenCTM().inverse()
     );
   }
 
   getPointString({ x, y }) {
-    const pt = this.domPoint(x,y);
+    const pt = this.domPoint(x, y);
 
     return `${Math.round(x)},${Math.round(y)}`;
   }

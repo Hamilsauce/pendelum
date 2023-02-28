@@ -41,23 +41,40 @@ body {
   overflow: hidden;
 }
 
-
-#start-prompt {
-  position: absolute;
-  top: 17.5%;
-  /* left: 13.5%; */
+.app-button {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 0px;
-  width: 300px;
-  height: 300px;
-  background: #FFFFFF10;
-  /* background: #00000020; */
+  padding: 4px 4px;
+  font-size: 18px;
+  font-weight: 600;
+  background: var(--accent-white);
+  background: var(--primary);
+  color: var(--accent-white);
+  border: 1px solid var(--accent-white);
+  border: none;
+  text-transform: uppercase;
+}
+
+.button-icon {
+  fill: #EAEAEA;
+  color: var(--accent-white);
+}
+
+#start-prompt {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  width: 100%;
+  height: 100%;
   z-index: 500;
   box-shadow: 0 2px 12px 2px #00000070;
-  backdrop-filter: invert(1) opacity(0.7) blur(2px);
+  backdrop-filter: brightness(1.6) hue-rotate(88deg) invert(1) opacity(0.7) blur(2px);
   border-radius: 6px;
 }
 
@@ -90,9 +107,9 @@ body {
   align-items: center;
   gap: 8px;
   width: 100%;
+  max-width: 500px;
   height: 100%;
   padding: 0px 8px 0px;
-  /* padding: 8px; */
 }
 
 
@@ -106,7 +123,6 @@ body {
   height: 100%;
   color: var(--accent-white40);
   letter-spacing: 12px;
-  /* line-height: 0.8; */
   text-transform: uppercase;
   font-weight: 300;
   font-size: 12px;
@@ -144,25 +160,30 @@ body {
   align-items: center;
   gap: 12px;
   color: #F0F0F0C9;
-  /* border: 1px solid var(--accent-white40); */
   padding: 2px 4px;
-  /* border-radius: 6px; */
 }
 
 #pitch-values {
+  position: absolute;
+  top: 8px;
+  right: 8px;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
-  gap: 4px;
+  width: fit-content;
+  min-width: 60px;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
   color: #F0F0F0C9;
-  /* border: 1px solid var(--accent-white40); */
-  padding: 2px 4px;
-  /* border-radius: 6px; */
+  padding: 4px;
+  z-index: 100;
+  pointer-events: none;
 }
 
 #pitch-values>div {
-  width: 40px;
+  text-align: center;
 }
 
 #oscillator-input {
@@ -175,7 +196,7 @@ body {
   border-left: 1px solid #F0F0F03D;
 }
 
-#app-header input {
+.app-input {
   width: 60px;
   padding: 4px;
   background: none;
@@ -189,6 +210,7 @@ body {
 
 
 #app-body {
+  position: relative;
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
@@ -217,8 +239,6 @@ body {
 }
 
 svg {
-  /* filter:  invert(1); */
-  /* filter:  invert(1) opacity(0.7) blur(0.1px); */
   touch-action: none;
 }
 

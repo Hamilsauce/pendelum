@@ -2,4 +2,4 @@ import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
 const { date, array, utils, text } = ham;
 import { SvgCanvas } from './components/SvgCanvas.js';
 
-const canvas = await SvgCanvas.attachCanvas(document.querySelector('svg'));
+const canvas = await SvgCanvas.attachCanvas(document.querySelector('#canvas'));

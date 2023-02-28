@@ -11,6 +11,7 @@
   <title>Pendulum Synth</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.3.0/rxjs.umd.min.js" integrity="sha512-y3JTS47nnpKORJX8Jn1Rlm+QgRIIZHtu3hWxal0e81avPrqUH48yk+aCi+gprT0RMAcpYa0WCkapxe+bpBHD6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./css/param-selector.css" />
   <link rel="stylesheet" href="./css/util.css" />
 </head>
 
@@ -23,7 +24,7 @@
       <div class="app-header-row">
         <div class="control-group">
           <label for="duration-input">Duration</label>
-          <input type="text" name="duration-input" id="duration-input" data-param="duration" value="1000">
+          <input type="text" name="duration-input" class="app-input" id="duration-input" data-param="duration" value="1000">
         </div>
         <div class="control-group">
           <label for="oscillator-input">Oscillator</label>
@@ -35,14 +36,31 @@
         </div>
       </div>
       <div class="app-header-row flex-end">
-        <div id="pitch-values" class="field-group">
-          <div id="note-value" class="field-group-value">0</div>
-          <div id="frequency-value" class="field-group-value">0</div>
+        <div id="playback-controls">
         </div>
+        <!-- <div _class="control-group" id="param-selector">
+          <div id="group">
+            <select name="param-name-select" id="param-name-select">
+              <option value="triangle">Duration</option>
+              <option value="sine">Type</option>
+              <option value="sawtooth">Octave</option>
+            </select>
+            <div name="selected-param-name-container" id="selected-param-name-container" data-param=""></div>
+          </div>
+          <div id="group">
+            <input type="text" id="param-value-input" data-param="duration" value="1000">
+          </div>
+          <div name="selected-param-value-container" id="selected-param-value-container" data-param=""></div>
+        </div> -->
+
       </div>
     </header>
 
     <section id="app-body">
+      <div id="pitch-values" class="field-group">
+        <div id="note-value" class="field-group-value">C3</div>
+        <div id="frequency-value" class="field-group-value">130</div>
+      </div>
 
       <section id="start-prompt">
         <button id="start-button" data-action="start">Start</button>
@@ -66,7 +84,7 @@
 
           <circle id="pendulum-dot-template" class="frequency-dot" cx="0" cy="0" r="2.5" fill="#FFFFFF50" />
 
-          <path class="pendulum-arc" id="pendulum-arc-template" d=" M -25,25 C -25,-25 25,-25 25,25" />
+          <path class="pendulum-curve" id="pendulum-curve-template" d=" M -25,25 C -25,-25 25,-25 25,25" />
 
           <g class="shape-container" id="fuck" data-layer="objects" transform="translate(0,0) scale(1)">
             <circle class="container-background" cx="0" cy="0" r="5" fill="#FFFFFF50" />
@@ -100,6 +118,11 @@
                 <circle id="end" class="path-vertex _draggable" cx="25" cy="25" r="2.5" fill="red" stroke="#FFFFFF" stroke-width="0.5" />
                 <circle id="controlB" class="control-point _draggable" cx="25" cy="-25" r="5" fill="purple" stroke="#FFFFFF90" />
               </g>
+              <g id="controlSetC" class="control-set">
+                <line x1="0" x2="0" y1="-10" y2="25" class="control-line" stroke="#C2C2C280" stroke-width="0.5" />
+                <circle id="middle" class="path-vertex _draggable" cx="0" cy="-12.5" r="2.5" fill="red" stroke="#FFFFFF" stroke-width="0.5" />
+                <circle id="controlC" class="control-point _draggable" cx="0" cy="25" r="5" fill="green" stroke="#FFFFFF90" />
+              </g>
             </g>
 
             <circle id="dot" class="container-background" cx="0" cy="0" r="2.5" fill="#FFFFFF50" />
@@ -114,8 +137,46 @@
       </div>
     </footer>
   </div>
+
   <script src="./main.js" type="module"></script>
   <script src="./script.js" type="module"></script>
+
+  <template id="playback-button-template">
+    <button id="play-pause" class="app-button">
+      <svg id="play-pause-icon" class="button-icon" width="24" height="24" viewBox="-5 -4 40 40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g id="play-icon">
+          <path d=" M 28,17.35 4.21,2 4,30 28,17.35 Z" />
+        </g>
+        <g id="pause-icon" style="display:none;">
+          <path d=" M 4,2 10,2 10,30 4,30 4,2 Z" />
+          <path d=" M 19.85,2 25.85,2 25.85,30 19.85,30 19.85,2 Z" />
+        </g>
+      </svg>
+    </button>
+    
+  </template>
+  <template id="param-selector-template">
+    <div id="param-selector" class="control-group">
+      <!-- <label for="param-input">Oscillator</label> -->
+      <select name="param-name-select" id="param-name-select" data-param="param-name">
+        <option value="triangle">Triangle</option>
+        <option value="sine">
+          <select name="param-name-select" id="param-name-select" data-param="param-name">
+            <option value="triangle">Triangle</option>
+            <option value="sine">Sine</option>
+            <option value="sawtooth">Sawtooth</option>
+          </select>
+        </option>
+        <option value="sawtooth">Sawtooth</option>
+      </select>
+      <div name="param-value-input-container" id="param-value-input-container" data-param="">
+        <option value="triangle">Triangle</option>
+        <option value="sine">Sine</option>
+        <option value="sawtooth">Sawtooth</option>
+      </div>
+    </div>
+  </template>
 </body>
+
 
 </html>

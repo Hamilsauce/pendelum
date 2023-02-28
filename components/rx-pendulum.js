@@ -38,6 +38,10 @@ class FrequencyDot {
     this.#positionSubject$.subscribe(this.#frequencySubject$)
     this.isStarted = true;
 
+    const pathLength = this.#track.getTotalLength()
+    console.log('pathLength', pathLength)
+    const middle = this.#track.getPointAtLength(this.#track.getTotalLength() / 2)
+    console.log('middle', middle)
     return this.frequency$
   }
 
@@ -55,6 +59,7 @@ class FrequencyDot {
     }
 
     const p = this.#track.getPointAtLength(spot);
+    // console.log('p', p)
 
     return p;
   }
@@ -72,12 +77,8 @@ class FrequencyDot {
   }
 
   move(u) {
-
     if (this.isStarted === true) {
       this.#positionSubject$.next(u);
-
-    } else {
-
     }
   }
 
@@ -89,6 +90,41 @@ class FrequencyDot {
 
 export const dot = new FrequencyDot();
 // export const dot2 = new FrequencyDot(1);
+
+export const anim = {
+  frameId: null,
+  start: function(duration) {
+    this.duration = duration || this.duration;
+    this.tZero = this.tZero ||  Date.now();
+
+    this.frameId = requestAnimationFrame(() => this.run());
+  },
+
+  run: function() {
+    let u = Math.min((Date.now() - this.tZero) / this.duration, 1);
+
+    if (u < 1) {
+      this.frameId = requestAnimationFrame(() => this.run());
+    } else {
+      this.onFinish();
+    }
+
+    dot.move(u);
+  },
+
+  stop: function() {
+    cancelAnimationFrame(this.frameId)
+  },
+
+  onFinish: function() {
+    this.tZero = null;
+    this.start(this.duration);
+  }
+};
+
+
+
+
 
 
 export class FrequencyPointAnimation {
@@ -121,35 +157,6 @@ export class FrequencyPointAnimation {
   }
 };
 
-
-
-
-
-
-export const anim = {
-  start: function(duration) {
-    this.duration = duration;
-    this.tZero = Date.now();
-
-    requestAnimationFrame(() => this.run());
-  },
-
-  run: function() {
-    let u = Math.min((Date.now() - this.tZero) / this.duration, 1);
-
-    if (u < 1) {
-      requestAnimationFrame(() => this.run());
-    } else {
-      this.onFinish();
-    }
-
-    dot.move(u);
-  },
-
-  onFinish: function() {
-    this.start(this.duration);
-  }
-};
 
 export const anim2 = {
   start: function(duration) {
