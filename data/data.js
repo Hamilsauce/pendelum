@@ -1,4 +1,4 @@
-const sourceUrl = '../data/note-frequencies.json';
+const sourceUrl = './note-frequencies.json';
 
 const noteArray = (await (await fetch(sourceUrl)).json()).notes;
 
