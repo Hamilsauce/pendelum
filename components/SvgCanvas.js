@@ -5,7 +5,7 @@ import { SvgPath } from './SvgPath.js';
 // const { date, array, utils, text } = ham;
 
 const { combineLatest, forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
-const { sampleTime, flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
+const {takeUntil, sampleTime, flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -55,11 +55,11 @@ export class SvgCanvas {
     this.eventResponses$ = new Subject();
 
     this.pointerDown$ = fromEvent(this.self, 'pointerdown').pipe(
-        filter(_ => _.target.dataset.pointGroup),
-      );
-      
+      filter(_ => _.target.dataset.pointGroup),
+    );
+
     this.pointerMove$ = fromEvent(this.self, 'pointermove')
-    
+
     this.pointerUp$ = fromEvent(this.self, 'pointerup')
 
     this.pointerEvents$ = this.pointerDown$
@@ -69,6 +69,7 @@ export class SvgCanvas {
             map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
             filter(_ => !!_.target.dataset.pointGroup),
             groupBy(_ => _.target.dataset.pointGroup),
+        takeUntil(this.pointerUp$),
           )
         )
       )
