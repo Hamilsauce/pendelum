@@ -5,7 +5,7 @@ const appEl = document.querySelector('#app');
 const appBody = document.querySelector('#app-body')
 const containers = document.querySelectorAll('.container')
 
-appEl.addEventListener('click', e => {
+// appEl.addEventListener('click', e => {
 
-  console.log('e', e)
-});
+//   console.log('e', e)
+// });
