@@ -2,7 +2,6 @@ import { draggable } from 'https://hamilsauce.github.io/hamhelper/draggable.js';
 import { Point } from './Point.js';
 import { SvgPath } from './SvgPath.js';
 // import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
-
 // const { date, array, utils, text } = ham;
 
 const { combineLatest, forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
@@ -55,12 +54,24 @@ export class SvgCanvas {
 
     this.eventResponses$ = new Subject();
 
-    this.pointerEvents$ = fromEvent(this.self, 'pointermove').pipe(
-      map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
-      filter(_ => !!_.target.dataset.pointGroup),
-      groupBy(_ => _.target.dataset.pointGroup),
-      tap(x => console.warn('pointerEvents$ GROUPS', x)),
-    );
+    this.pointerDown$ = fromEvent(this.self, 'pointerdown').pipe(
+        filter(_ => _.target.dataset.pointGroup),
+      );
+      
+    this.pointerMove$ = fromEvent(this.self, 'pointermove')
+    
+    this.pointerUp$ = fromEvent(this.self, 'pointerup')
+
+    this.pointerEvents$ = this.pointerDown$
+      .pipe(
+        switchMap(() => this.pointerMove$
+          .pipe(
+            map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
+            filter(_ => !!_.target.dataset.pointGroup),
+            groupBy(_ => _.target.dataset.pointGroup),
+          )
+        )
+      )
 
     this.pathPoints$ = this.pointerEvents$.pipe(
       mergeMap(group$ => group$
