@@ -19,7 +19,7 @@ export const DEFAULT_PATH_DATA = {
 }
 
 
-export class SvgPath {
+export class SvgThreePointCurve {
   #data$;
   #positioning = Position.abs;
 
@@ -29,7 +29,6 @@ export class SvgPath {
 console.log('this.self', this.self)
     this.inputSubscription = this.input$
       .pipe(
-        tap(x => console.warn('PATH INPUTS$: ', x)),
         tap(x => this.#data$.next(x))
       )
       .subscribe()
@@ -74,11 +73,16 @@ console.log('this.self', this.self)
   static createPath(pathElement, input$) { return new SvgPath(pathElement, input$) }
 
   update(dict) {
-    console.warn('[[ SVG PATH UPDATE ]] dict: ', dict)
+    console.log('dict', dict)
+    return `${this.moveTo(dict.start)} ${this.cubic(dict)}`
+  }
+  
+ 
+  updateCurve(dict) {
+    console.log('dict', dict)
     return `${this.moveTo(dict.start)} ${this.cubic(dict)}`
   }
 
-  updateCurve() {}
 
   connect() {
     return this.#data$.asObservable()

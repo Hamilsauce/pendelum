@@ -2,7 +2,7 @@
   display: none;
   /* display: flex; */
   flex-direction: row;
-justify-content: space-evenly;
+  justify-content: space-evenly;
   align-items: center;
   /* gap: 8px; */
   width: fit-content;

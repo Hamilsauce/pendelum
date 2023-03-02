@@ -66,7 +66,7 @@
         <button id="start-button" data-action="start">Start</button>
       </section>
 
-      <svg id="canvas" width="0" height="0" viewBox="-50 -50 100 200" _preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <svg id="canvas" width="412" height="781" viewBox="-50 -50 100 200" _preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs>
           <pattern id="smallGrid" width="2.5" height="2.5" patternUnits="userSpaceOnUse">
             <path id="smallGridPath" d="M 2.5 0 H 0 V 2.5" fill="none" stroke="#C9C9C950" stroke-width="0.1" />
@@ -105,7 +105,49 @@
           <g class="layer" id="objects-layer" data-layer="objects" transform="translate(0,-0)">
 
             <g class="shape-container" id="squiggly-container" data-selected="false" data-layer="objects" transform="translate(0,0) scale(1)">
-              <path class="curve" id="curve" d=" M -25,25 C -25,-25 25,-25 25,25" />
+              <path class="curve" id="curve" d="
+                M -25,25 
+                C -25,-25 25,25 25,-25
+              " />
+
+              <path class="curve" id="curve2" d="
+                M -25,25 
+                C -25,-25 12,12 0,-12.5
+                S 0,12 25,25
+              " />
+
+              <g id="pendulum-container" transform="translate(-47.5,30) scale(0.5)">
+                <!-- <path class="curve" d="
+                  M 10 80 
+                  C 40 10, 95 0, 95 80 
+                  S 150 150, 180 80
+                " stroke="black" fill="transparent" /> -->
+
+                <path id="double-curve" class="curve" d="
+                  M 10 80
+                  C 40 10, 65 10, 95 80
+                  S 150 150, 180 80
+                " stroke="black" fill="transparent" />
+
+                <g id="control-set-1" class="control-set">
+                  <line id="control-line-1" class="control-line" x1="40" x2="10" y1="10" y2="80" stroke="#C2C2C280" stroke-width="0.5" />
+                  <circle id="path-point-1" class="path-vertex" cx="10" cy="80" r="5.5" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
+                  <circle id="control-point-1" class="control-point" cx="40" cy="10" r="5.5" fill="blue" stroke="#FFFFFF" stroke-width="0.5" />
+                </g>
+
+                <g id="control-set-2" class="control-set">
+                  <line id="control-line-2" class="control-line" x1="65" x2="95" y1="10" y2="80" stroke="#C2C2C280" stroke-width="0.5" />
+                  <circle id="path-point-2" class="path-vertex" cx="95" cy="80" r="5.5" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
+                  <circle id="control-point-2" class="control-point" cx="65" cy="10" r="5.5" fill="orange" stroke="#FFFFFF" stroke-width="0.5" />
+                </g>
+
+                <g id="control-set-2" class="control-set">
+                  <line id="control-line-2" class="control-line" x1="150" x2="180" y1="150" y2="80" stroke="#C2C2C280" stroke-width="0.5" />
+                  <circle id="path-point-3" class="path-vertex" cx="180" cy="80" r="5.5" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
+                  <circle id="control-point-3" class="control-point" cx="150" cy="150" r="5.5" fill="green" stroke="#FFFFFF" stroke-width="0.5" />
+                </g>
+                
+              </g>
 
               <g id="controlSetA" class="control-set">
                 <line x1="-25" x2="-25" y1="-25" y2="25" class="control-line" stroke="#C2C2C280" stroke-width="0.5" />
@@ -118,18 +160,26 @@
                 <circle id="end" class="path-vertex _draggable" cx="25" cy="25" r="2.5" fill="red" stroke="#FFFFFF" stroke-width="0.5" />
                 <circle id="controlB" class="control-point _draggable" cx="25" cy="-25" r="5" fill="purple" stroke="#FFFFFF90" />
               </g>
-              <g id="controlSetC" class="control-set">
+              <!-- <g id="controlSetC" class="control-set">
                 <line x1="0" x2="0" y1="-10" y2="25" class="control-line" stroke="#C2C2C280" stroke-width="0.5" />
                 <circle id="middle" class="path-vertex _draggable" cx="0" cy="-12.5" r="2.5" fill="red" stroke="#FFFFFF" stroke-width="0.5" />
                 <circle id="controlC" class="control-point _draggable" cx="0" cy="25" r="5" fill="green" stroke="#FFFFFF90" />
-              </g>
+              </g> -->
             </g>
 
             <circle id="dot" class="container-background" cx="0" cy="0" r="2.5" fill="#FFFFFF50" />
-            <!-- <circle id="dot2" class="container-background" cx="0" cy="0" r="2.5" fill="#FFFFFF50" /> -->
+            <circle id="dot2" class="container-background" cx="0" cy="0" r="2.5" fill="#FFFFFF50" />
           </g>
         </g>
       </svg>
+      <!-- <svg width="190" height="160" xmlns="http://www.w3.org/2000/svg">
+        <path d="
+          M 25 80 
+          C 40 25, 65 25, 95 80 
+          S 150 150, 180 80
+          " stroke="black" fill="transparent" />
+      </svg> -->
+
     </section>
     <footer id="app-footer">
       <div class="container">
@@ -153,7 +203,7 @@
         </g>
       </svg>
     </button>
-    
+
   </template>
   <template id="param-selector-template">
     <div id="param-selector" class="control-group">
