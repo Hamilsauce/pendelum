@@ -27,11 +27,21 @@ const createText = (value, parent) => {
   return textNode;
 }
 
+export const InitialPoints = {
+  'path-point-0': Point.create(-50, 0),
+  'path-point-1': Point.create(0, 0),
+  'path-point-2': Point.create(50, 0),
+  'control-point-0': Point.create(-35, -50),
+  'control-point-1': Point.create(-15, -50),
+  'control-point-2': Point.create(25, 50),
+}
+
 
 export class SvgCanvas {
   #dir;
   #track;
   #sprite;
+
   constructor(el, options = {}) {
     this.self = el;
     this.self.setAttribute('width', window.innerWidth)
@@ -43,36 +53,24 @@ export class SvgCanvas {
       eventPoint$: new Subject(),
     };
 
+    this.eventResponses$ = new Subject();
+
     this.pointerEvents$ = fromEvent(this.self, 'pointermove').pipe(
       map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
-      groupBy(_ => _.target.id),
+      filter(_ => !!_.target.dataset.pointGroup),
+      groupBy(_ => _.target.dataset.pointGroup),
+      tap(x => console.warn('pointerEvents$ GROUPS', x)),
     );
-
-    this.eventResponses$ = new Subject();
 
     this.pathPoints$ = this.pointerEvents$.pipe(
       mergeMap(group$ => group$
         .pipe(
           // sampleTime(40),
           filter(_ => _.target.closest('.control-set')),
-          // scan((prev, { target, x, y }) => {
-          //   const pt = this.domPoint.bind(this)(target, x, y)
-          //   const prevPt = this.domPoint.bind(this)(prev.target, prev.x, prev.y)
-          //   const xDist = Math.abs(pt.x - prevPt.x)
-          //   const yDist = Math.abs(pt.y - prevPt.y)
-
-          //   const newPoint = {
-          //     x: xDist >= 5 ? x + 5 : prev.x,
-          //     y: yDist >= 5 ? y + 5 : prev.y
-          //   }
-
-          //   return { ...newPoint, target }
-          //   // return xDist >= 10 || yDist >= 10 ? { target, x, y } : prev
-          // }),
           tap(({ target, x, y }) => {
             const value = this.domPoint.bind(this)(target, x, y);
 
-            const pointType = target.classList.contains('path-vertex') ? 'vertex' : 'control';
+            const pointType = target.classList.contains('path-point') ? 'vertex' : 'control';
             const line = target.closest('.control-set').querySelector('.control-line');
 
             target.cx.baseVal.value = value.x;
@@ -87,7 +85,7 @@ export class SvgCanvas {
             }
           }),
           map(({ target, x, y }) => ({
-            [target.id]: this.domPoint(target, x, y)
+            [`${target.id}`]: this.domPoint(target, x, y)
           })),
         )
       ),
@@ -106,14 +104,14 @@ export class SvgCanvas {
     this.hudLayer = this.self.querySelector('#hud');
     this.surface = this.self.querySelector('#surface-layer');
 
+
     this.pathElement = this.self.querySelector('#curve');
 
-    this.pathModel = SvgPath.createPath(this.pathElement, this.pathPoints$);
+    this.pathModel = SvgPath.createPath(this.pathElement, this.pathPoints$, InitialPoints);
 
-    this.pathData$ = this.pathModel.connect()
-      .pipe(
-        tap(x => this.pathElement.setAttribute('d', x)),
-      );
+    this.pathData$ = this.pathModel.connect().pipe(
+      tap(x => this.pathElement.setAttribute('d', x)),
+    );
 
     this.pathData$.subscribe();
   }
@@ -143,7 +141,6 @@ export class SvgCanvas {
     }
 
     const p = this.#track.getPointAtLength(spot);
-    // console.log('p', p)
 
     return p;
   }
@@ -153,7 +150,6 @@ export class SvgCanvas {
 
     return pt;
   }
-
 
   update(x, y) {
     this.audio.oscillator.frequency.value = y * 2;

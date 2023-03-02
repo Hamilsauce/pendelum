@@ -1,5 +1,4 @@
 import { Point } from './Point.js';
-
 const { forkJoin, asObservable, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
@@ -19,16 +18,17 @@ export const DEFAULT_PATH_DATA = {
 }
 
 
-export class SvgThreePointCurve {
+export class SvgPath {
   #data$;
   #positioning = Position.abs;
 
   constructor(pathElement, input$, initialData = DEFAULT_PATH_DATA, options = {}) {
     this.self = pathElement;
     this.input$ = input$;
-console.log('this.self', this.self)
+
     this.inputSubscription = this.input$
       .pipe(
+        // tap(x => console.warn('PATH INPUTS$: ', x)),
         tap(x => this.#data$.next(x))
       )
       .subscribe()
@@ -73,16 +73,11 @@ console.log('this.self', this.self)
   static createPath(pathElement, input$) { return new SvgPath(pathElement, input$) }
 
   update(dict) {
-    console.log('dict', dict)
-    return `${this.moveTo(dict.start)} ${this.cubic(dict)}`
-  }
-  
- 
-  updateCurve(dict) {
-    console.log('dict', dict)
+    // console.warn('[[ SVG PATH UPDATE ]] dict: ', dict)
     return `${this.moveTo(dict.start)} ${this.cubic(dict)}`
   }
 
+  updateCurve() {}
 
   connect() {
     return this.#data$.asObservable()

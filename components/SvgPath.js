@@ -9,47 +9,33 @@ const Position = {
   rel: 'relative',
 }
 
-export const DEFAULT_PATH_DATA = {
-  points: {
-    start: Point.create(-25, 25),
-    controlA: Point.create(-25, -25),
-    controlB: Point.create(25, -25),
-    end: Point.create(25, 25),
-  }
-}
-
-
 export class SvgPath {
   #data$;
   #positioning = Position.abs;
 
-  constructor(pathElement, input$, initialData = DEFAULT_PATH_DATA, options = {}) {
+  constructor(pathElement, input$, initialData, options = {}) {
     this.self = pathElement;
     this.input$ = input$;
-console.log('this.self', this.self)
+
     this.inputSubscription = this.input$
       .pipe(
-        tap(x => console.warn('PATH INPUTS$: ', x)),
         tap(x => this.#data$.next(x))
       )
       .subscribe()
 
-    this.#data$ = new BehaviorSubject(initialData.points)
+    this.#data$ = new BehaviorSubject(initialData)
       .pipe(
-        map(x => x),
-        scan((previousPoints, points) => {
-          return { ...previousPoints, ...points }
-        }, {}),
-        map(this.update.bind(this)),
-      )
-
-    this.initialData = initialData;
+        scan((previousPoints, points) => ({
+          ...previousPoints,
+          ...points
+        }), {}),
+        map(this.updateCurve.bind(this)),
+      );
   }
 
   get def() { return this.self.getAttribute('d') }
 
   set def(newValue) { this._def = newValue }
-
 
   get dataset() {
     return this.self.dataset
@@ -59,26 +45,16 @@ console.log('this.self', this.self)
     return this.self.getBoundingClientRect();
   }
 
-  get middlePoint() {
-    return this.self.getBoundingClientRect();
+  static createPath(pathElement, input$, initialData) { return new SvgPath(pathElement, input$, initialData) }
+
+  updateCurve(pointDict = {}) {
+    return `
+      M ${this.getPointString(pointDict['path-point-0'])}
+      C ${this.getPointString(pointDict['control-point-0'])} ${this.getPointString(pointDict['control-point-1'])} ${this.getPointString(pointDict['path-point-1'])}
+      S ${this.getPointString(pointDict['control-point-2'])} ${this.getPointString(pointDict['path-point-2'])}
+    `.trim();
   }
 
-  set selected(v) {
-    this.container.dataset.selected = v
-  }
-
-  get selected() {
-    return this.container.dataset.selected === 'true' ? true : false
-  }
-
-  static createPath(pathElement, input$) { return new SvgPath(pathElement, input$) }
-
-  update(dict) {
-    console.warn('[[ SVG PATH UPDATE ]] dict: ', dict)
-    return `${this.moveTo(dict.start)} ${this.cubic(dict)}`
-  }
-
-  updateCurve() {}
 
   connect() {
     return this.#data$.asObservable()
@@ -93,30 +69,6 @@ console.log('this.self', this.self)
     )
   }
 
-  toggleSelect(p) {
-    this.selected = !this.selected
-  }
-
-  moveTo({ x, y }, positioning = 'abs') {
-    const cmd = positioning === 'abs' ? 'M' : 'm'
-    const point = ` ${cmd} ${this.getPointString({x,y})}`
-
-    return point;
-  }
-
-  cubic({ controlA, controlB, end }, positioning = 'abs') {
-    const cmd = positioning === 'abs' ? 'C' : 'c';
-    const point = ` ${cmd} ${this.getPointString(controlA)} ${this.getPointString(controlB)} ${this.getPointString(end)}`;
-
-    return point;
-  }
-
-  // LineTo() { ' L, l, H, h, V, v' }
-  // Cubic() { 'Bézier Curve: C, c, S, s' }
-  // Quadratic() { 'Bézier Curve: Q, q, T, t' }
-  // Elliptical() { 'Arc Curve: A, a' }
-  // ClosePath() { ' Z, z' }
-
   domPoint(x, y) {
     return new DOMPoint(x, y).matrixTransform(
       this.self.ownerSVGElement.getScreenCTM().inverse()
@@ -128,4 +80,25 @@ console.log('this.self', this.self)
 
     return `${Math.round(x)},${Math.round(y)}`;
   }
+
+
+  // moveTo({ x, y }, positioning = 'abs') {
+  //   const cmd = positioning === 'abs' ? 'M' : 'm'
+  //   const point = ` ${cmd} ${this.getPointString({x,y})}`
+
+  //   return point;
+  // }
+
+  // cubic({ controlA, controlB, end }, positioning = 'abs') {
+  //   const cmd = positioning === 'abs' ? 'C' : 'c';
+  //   const point = ` ${cmd} ${this.getPointString(controlA)} ${this.getPointString(controlB)} ${this.getPointString(end)}`;
+
+  //   return point;
+  // }
+
+  // LineTo() { ' L, l, H, h, V, v' }
+  // Cubic() { 'Bézier Curve: C, c, S, s' }
+  // Quadratic() { 'Bézier Curve: Q, q, T, t' }
+  // Elliptical() { 'Arc Curve: A, a' }
+  // ClosePath() { ' Z, z' }
 }
