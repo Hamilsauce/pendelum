@@ -68,7 +68,6 @@ export class SvgCanvas {
           map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
           filter(_ => !!_.target.dataset.pointGroup),
           groupBy(_ => _.target.dataset.pointGroup),
-          // takeUntil(this.pointerUp$),
           switchMap(groups$ => this.pointerUp$
             .pipe(
               map(() => groups$)
