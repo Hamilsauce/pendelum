@@ -42,13 +42,13 @@ export class AudioController {
       oscillator: new GainNode(this.#ctx, { gain: 0.5 }),
       delay: new GainNode(this.#ctx, { gain: 0.3 }),
     }
-    
+
     this.#delay = new DelayNode(this.#ctx, {
       delayTime: 0.5,
     });
 
     this.#oscillator.connect(this.#delay);
-    
+
     this.#delay.connect(this.#gains.delay);
 
     this.#oscillator.connect(this.#gains.oscillator);
@@ -63,29 +63,37 @@ export class AudioController {
       up: [0.0, 0.1, 0.225, 0.325, 0.4, 0.5],
       down: [0.0, 0.1, 0.225, 0.325, 0.4, 0.5].reverse(),
     }
-    
+
     this.lastFreq = this.#oscillator.frequency.value;
-  
+
     let cnt = 0;
-  
+
     setInterval(() => {
-      if (this.#gains.oscillator.gain.value > 0) {
-        this.#gains.oscillator.gain.setValueCurveAtTime(getCurve(...curves.down), this.#ctx.currentTime, 0.01);
+      if (this.#gains.oscillator.gain.value > 0.01) {
+        // this.#gains.oscillator.gain.setValueCurveAtTime(getCurve(...curves.down), this.#ctx.currentTime, 0.01);
+        this.#gains.oscillator.gain.exponentialRampToValueAtTime(
+          0.0001,
+          this.#ctx.currentTime + 0.25
+        );
       }
 
+
       else {
-        if (cnt % 2 === 0) {
+        if (cnt % 3 === 0) {
           this.lastFreq = this.#oscillator.frequency.value;
 
-          this.#oscillator.frequency.value = this.#oscillator.frequency.value * 1.25;
+          this.#oscillator.frequency.value = this.#oscillator.frequency.value * 1.5;
         } else {
           this.#oscillator.frequency.value = this.lastFreq;
         }
-        
-        this.#gains.oscillator.gain.setValueCurveAtTime(getCurve(...curves.up), this.#ctx.currentTime, 0.01);
+
+        this.#gains.oscillator.gain.exponentialRampToValueAtTime(
+          0.5,
+          this.#ctx.currentTime + 0.25
+        );
       }
       cnt++
-    }, 125);
+    }, 120);
 
     this.setFrequency = this.#setFrequency.bind(this);
   }
