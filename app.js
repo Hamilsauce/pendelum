@@ -26,7 +26,7 @@ export class App {
   body = document.querySelector('#app-body');
   startPrompt = document.querySelector('#start-prompt');
   startButton = document.querySelector('#start-button');
-  audio = (new AudioController() || new webkitAudioContext());
+  audio = null //(new AudioController() || new webkitAudioContext());
 
   constructor() {
     this.onPlaybackChange = this.#onPlaybackChange.bind(this);
@@ -54,6 +54,7 @@ export class App {
   get height() { return this.self.getBoundingClientRect().height }
 
   #onStart(e) {
+    this.audio = (new AudioController() || new webkitAudioContext());
     this.audio.play();
     this.startPrompt.remove();
 
@@ -106,7 +107,7 @@ export class App {
       this.audio.resume();
       anim.start();
     }
-    
+
     const input = e.target.closest('[data-param]');
 
     if (input && input.dataset.param === 'duration') {
