@@ -46,7 +46,7 @@ export class App {
       this.audio.suspend()
     }
 
-    window.onblur = this.togglePlayback;
+    window.onblur = () => this.togglePlayback(false);
     window.onfocus = this.togglePlayback;
   }
 
@@ -106,12 +106,12 @@ export class App {
     }
   }
 
-  #togglePlayback(e) {
-    if (this.audio.playing) {
+  #togglePlayback(state) {
+    if (state === false || this.audio.playing) {
       this.audio.suspend();
       anim.stop();
     }
-    else {
+    else if (state === true || !this.audio.playing) {
       this.audio.resume();
       anim.start();
     }

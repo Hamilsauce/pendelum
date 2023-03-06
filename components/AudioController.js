@@ -77,7 +77,6 @@ export class AudioController {
         );
       }
 
-
       else {
         if (cnt % 3 === 0) {
           this.lastFreq = this.#oscillator.frequency.value;

@@ -132,7 +132,6 @@ export class SvgCanvas {
     this.pathData$.subscribe();
   }
 
-
   get elements() { return [...this.objectRegistry.keys()] }
 
   get objectRegistry() { return this.state.objectRegistry }
@@ -189,9 +188,8 @@ export class SvgCanvas {
     );
   }
 
-  setViewport(e) {
+  setViewport() {
     this.self.setAttribute('width', this.self.parentElement ? this.self.parentElement.getBoundingClientRect().width : window.innerWidth)
     this.self.setAttribute('height', this.self.parentElement ? this.self.parentElement.getBoundingClientRect().height : window.innerHeight)
   }
-
 }
