@@ -26,7 +26,7 @@ export class App {
   body = document.querySelector('#app-body');
   startPrompt = document.querySelector('#start-prompt');
   startButton = document.querySelector('#start-button');
-  audio = new AudioController();
+  audio = (new AudioController() || new webkitAudioContext());
 
   constructor() {
     this.onPlaybackChange = this.#onPlaybackChange.bind(this);
