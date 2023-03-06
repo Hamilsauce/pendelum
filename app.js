@@ -30,6 +30,7 @@ export class App {
 
   constructor() {
     this.onPlaybackChange = this.#onPlaybackChange.bind(this);
+    this.togglePlayback = this.#togglePlayback.bind(this);
     this.onParamChange = this.#onParamChange.bind(this);
     this.onStart = this.#onStart.bind(this);
 
@@ -40,6 +41,13 @@ export class App {
     this.startButton.addEventListener('click', this.onStart);
     this.self.addEventListener('change', this.onParamChange);
     pbButton.dom.addEventListener('click', this.onPlaybackChange);
+
+    window.onbeforeunload = (e) => {
+      this.audio.suspend()
+    }
+
+    window.onblur = this.togglePlayback;
+    window.onfocus = this.togglePlayback;
   }
 
   get params() {
@@ -95,6 +103,17 @@ export class App {
       const value = coerce(input.value);
 
       this.audio.setType({ type: value });
+    }
+  }
+
+  #togglePlayback(e) {
+    if (this.audio.playing) {
+      this.audio.suspend();
+      anim.stop();
+    }
+    else {
+      this.audio.resume();
+      anim.start();
     }
   }
 

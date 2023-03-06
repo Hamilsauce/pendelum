@@ -43,8 +43,10 @@ export class SvgCanvas {
 
   constructor(el, options = {}) {
     this.self = el;
-    this.self.setAttribute('width', window.innerWidth)
-    this.self.setAttribute('height', window.innerHeight)
+    // this.self.setAttribute('height', window.innerHeight)
+  this.setViewport();
+  window.onresize = this.setViewport
+  
     this.boundPost = this.post.bind(this);
 
     this.state = {
@@ -186,4 +188,10 @@ export class SvgCanvas {
       element.getScreenCTM().inverse()
     );
   }
+  
+  setViewport(e) {
+    this.self.setAttribute('width', this.self.parentElement ? this.self.parentElement.getBoundingClientRect().width : window.innerWidth)
+    this.self.setAttribute('height', this.self.parentElement ? this.self.parentElement.getBoundingClientRect().height : window.innerHeight)
+  }
+  
 }
