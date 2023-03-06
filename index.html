@@ -36,8 +36,7 @@
         </div>
       </div>
       <div class="app-header-row flex-end">
-        <div id="playback-controls">
-        </div>
+        <div id="playback-controls"></div>
         <!-- <div _class="control-group" id="param-selector">
           <div id="group">
             <select name="param-name-select" id="param-name-select">
@@ -152,10 +151,10 @@
   <template id="playback-button-template">
     <button id="play-pause" class="app-button">
       <svg id="play-pause-icon" class="button-icon" width="24" height="24" viewBox="-5 -4 40 40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <g id="play-icon">
+        <g id="play-icon" style="display:none;">
           <path d=" M 28,17.35 4.21,2 4,30 28,17.35 Z" />
         </g>
-        <g id="pause-icon" style="display:none;">
+        <g id="pause-icon">
           <path d=" M 4,2 10,2 10,30 4,30 4,2 Z" />
           <path d=" M 19.85,2 25.85,2 25.85,30 19.85,30 19.85,2 Z" />
         </g>

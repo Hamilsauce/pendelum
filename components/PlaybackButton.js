@@ -49,7 +49,6 @@ export class PlaybackButton extends EventEmitter {
   get pauseIcon() { return this.selectDOM('#pause-icon') };
 
 
-
   toggleIcons() {
     if (this.playIcon.style.display === 'none') {
       this.playIcon.style.display = null;
