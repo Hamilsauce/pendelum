@@ -64,8 +64,7 @@ export class SvgCanvas {
 
     this.pointerUp$ = fromEvent(this.self, 'pointerup')
 
-    this.pointerEvents$ = this.pointerDown$
-      .pipe(
+    this.pointerEvents$ = this.pointerDown$.pipe(
         switchMap(() => this.pointerMove$.pipe(
           map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
           filter(_ => !!_.target.dataset.pointGroup),

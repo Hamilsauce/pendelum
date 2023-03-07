@@ -18,15 +18,15 @@
     <header id="app-header">
       <div id="app-header-left">L</div>
       <div id="app-header-center">
-        <h1>Title</h1>
+        <h1>knob</h1>
       </div>
       <div id="app-header-right">R</div>
     </header>
     <section id="app-body">
-      <svg xmlns="http://www.w3.org/2000/svg" width="412" height="700" viewBox="0 0 412 700">
-        <g id="scene" transform-origin="center" transform="translate(-250,-100) rotate(90)">
-          <path id="curve" d="M 29.928125,119.32884 C 59.868756,78.85387 99.789596,30.283895 138.66049,30.104515 c 80.46172,-0.37133 90.87185,137.794285 140.7729,129.699295 40.35037,-6.54568 49.90105,-80.94994 86.53937,-78.86548 33.24073,1.89117 22.2547,70.77048 73.14399,70.77048 39.92084,0 58.65264,-56.66496 99.80211,-56.66496 49.90105,0 69.86147,80.94995 99.8021,48.56997" style="fill: none; stroke: #000; stroke-width: 1" />
-          <circle r="10" cy="0" cx="0" id="dot" style="fill: #dd1819" />
+      <svg transform-origin="center" xmlns="http://www.w3.org/2000/svg" width="412" height="700" viewBox="-50 -50 100 100">
+        <g class="dial-knob" transform-origin="center" transform="translate(0,0) rotate(0)">
+          <circle r="10" cy="0" cx="0" class="knob" _transform-origin="center" />
+          <line x1="0" y1="0" x2="0" y2="-10" class="dial" _transform-origin="center"></line>
         </g>
       </svg>
     </section>
@@ -36,7 +36,7 @@
       </div>
     </footer>
   </div>
-  <script src="./dot-2.js" type="module"></script>
+  <script src="./dialknob.js" type="module"></script>
 </body>
 
 </html>
