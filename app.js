@@ -39,15 +39,13 @@ export class App {
     this.startPrompt.style.left = `${(this.width / 2) - (this.startPrompt.getBoundingClientRect().width / 2)}px`
 
     this.startButton.addEventListener('click', this.onStart);
-    this.self.addEventListener('change', this.onParamChange);
-    pbButton.dom.addEventListener('click', this.onPlaybackChange);
 
-    window.onbeforeunload = (e) => {
-      this.audio.suspend()
-    }
 
-    window.onblur = () => this.togglePlayback(false);
-    window.onfocus = this.togglePlayback;
+    // window.onbeforeunload = (e) => {
+    //   this.audio.suspend()
+    // }
+
+    // window.onfocus = this.togglePlayback;
   }
 
   get params() {
@@ -82,10 +80,16 @@ export class App {
           this.frequencyDisplay.textContent = this.frequencyDisplay.textContent
         }
       }),
-      // map(({ frequency }) => osc.frequency.value = (frequency + 100) * 2),
     ).subscribe();
 
     anim.start(+this.params.duration.value);
+
+    this.self.addEventListener('change', this.onParamChange);
+    pbButton.dom.addEventListener('click', this.onPlaybackChange);
+
+    window.onblur = () => this.togglePlayback(false);
+    window.onfocus = () => this.togglePlayback(false);
+
   }
 
   #onParamChange(e) {
@@ -115,6 +119,8 @@ export class App {
       this.audio.resume();
       anim.start();
     }
+
+    pbButton.toggleIcons();
   }
 
   #onPlaybackChange(e) {

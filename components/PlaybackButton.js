@@ -2,18 +2,6 @@ import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
 import { EventEmitter } from 'https://hamilsauce.github.io/hamhelper/event-emitter.js';
 const { template, DOM, utils } = ham;
 
-export const ElementProperties = {
-  id: String,
-  classList: Array,
-  dataset: Object,
-}
-
-export const ViewOptions = {
-  templateName: 'map',
-  elementProperties: ElementProperties,
-  children: [],
-}
-
 export class PlaybackButton extends EventEmitter {
   #self;
   #name;

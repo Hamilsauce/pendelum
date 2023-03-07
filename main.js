@@ -1,4 +1,9 @@
 import { App } from './app.js';
+import { SvgCanvas } from './components/SvgCanvas.js';
+
+
+
+const canvas = await SvgCanvas.attachCanvas(document.querySelector('#canvas'));
 const app = new App();
 
 // const appEl = document.querySelector('#app');
