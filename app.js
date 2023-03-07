@@ -60,7 +60,7 @@ export class App {
   get height() { return this.self.getBoundingClientRect().height }
 
   #onStart(e) {
-    this.audio = (new AudioController() || new webkitAudioContext());
+    this.audio = new AudioController();
     this.audio.play();
     this.startPrompt.remove();
 
@@ -85,11 +85,11 @@ export class App {
     anim.start(+this.params.duration.value);
 
     this.self.addEventListener('change', this.onParamChange);
+    
     pbButton.dom.addEventListener('click', this.onPlaybackChange);
 
     window.onblur = () => this.togglePlayback(false);
     window.onfocus = () => this.togglePlayback(false);
-
   }
 
   #onParamChange(e) {

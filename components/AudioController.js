@@ -29,7 +29,7 @@ export class AudioController {
     this.#controllers = [];
     this.#gainstash = []
 
-    this.#ctx = new AudioContext();
+    this.#ctx = (new AudioContext() || new webkitAudioContext());
 
     this.#oscillator = this.#ctx.createOscillator()
 
