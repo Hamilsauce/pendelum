@@ -1,17 +1,11 @@
-const getCurve = (...values) => new Float32Array(values)
-// .fill(0)
-// .map((_, i, arr) => {
-//   if (i == 0) {
-//     return 0
-//   }
-//   else if (i === arr.length - 1) {
-//     return gainModifier
-//   }
+import { getSynthParamsStore } from '../store/synth-params/synth-params.store.js';
 
-//   else {
-//     return (i / 10)
-//   }
-// })
+const paramsStore = getSynthParamsStore()
+
+const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
+const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
+
+const getCurve = (...values) => new Float32Array(values)
 
 export class AudioController {
   #type = 'triangle';
@@ -69,6 +63,18 @@ export class AudioController {
     this.toggleWarbler(true)
 
     this.setFrequency = this.#setFrequency.bind(this);
+
+    this.params$ = paramsStore.select();
+
+    this.params$
+      .pipe(
+        tap(({ oscillator, delay, warbler }) => {
+          this.setOscillator(oscillator);
+          this.setDelay(delay);
+          this.setWarbler(warbler);
+        }),
+      )
+      .subscribe();
   }
 
   get oscillatorTypes() { return ['sine', 'sawtooth', 'triangle'] }
@@ -86,33 +92,37 @@ export class AudioController {
 
   toggleWarbler(state) {
     if (state) {
+      clearInterval(this.warblerIntervalHandle || 0);
+
       this.warblerIntervalHandle = setInterval(() => {
         let freq = this.#oscillator.frequency.value
 
         this.#gains.oscillator.gain.exponentialRampToValueAtTime(
-          0.16,
-          this.#ctx.currentTime + 0.5
+          0.08,
+          this.#ctx.currentTime + 0.08
         );
 
-        this.#oscillator.frequency.exponentialRampToValueAtTime(this.#oscillator.frequency.value * 2, this.#ctx.currentTime + 1.25);
+        this.#oscillator.frequency.exponentialRampToValueAtTime(
+          this.#oscillator.frequency.value * 1.67,
+          this.#ctx.currentTime + 0.32
+        );
 
         setTimeout(() => {
-          this.#oscillator.frequency.exponentialRampToValueAtTime(freq, this.#ctx.currentTime + 1.5);
-        }, 1000)
+          this.#gains.oscillator.gain.exponentialRampToValueAtTime(
+            0.0001,
+            this.#ctx.currentTime + 0.08
+          );
 
-      }, 100);
+          this.#oscillator.frequency.exponentialRampToValueAtTime(
+            this.#oscillator.frequency.value * 0.67,
+            this.#ctx.currentTime + 0.08
+          );
+        }, 50)
+
+      }, 125);
     } else {
       clearInterval(this.warblerIntervalHandle);
     }
-  }
-
-  removeGain(gain) {
-    // Important! Setting a scheduled parameter value
-
-    // gain.gain.setValueAtTime(gain.gain.value, this.#ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, this.#ctx.currentTime + 0.03);
-
-    this.#gainstash = this.#gainstash.filter(_ => _ !== gain);
   }
 
   resume() {
@@ -141,7 +151,7 @@ export class AudioController {
 
 
   setType({ type }) {
-    this.type = type;
+    this.#oscillator.type = v;
 
     return type;
   }
@@ -150,8 +160,23 @@ export class AudioController {
     Object.assign(this, paramMap);
   }
 
+  setWarbler({ active }) {
+    if (typeof active === 'boolean') {
+      this.toggleWarbler(active)
+    }
+  }
+
+  setOscillator({ type, level }) {
+    if (type) {
+      this.#oscillator.type = type;
+    }
+    if (level) {
+      this.#gains.oscillator.gain.value = level;
+    }
+  }
+
   setDelay({ time, level }) {
-    if (time) {
+    if (!isNaN(+time)) {
       this.#delay.delayTime.value = time;
     }
     if (level) {
@@ -167,7 +192,7 @@ export class AudioController {
       this.playing = true;
 
       return this.#gain.connect(this.#ctx.destination);
-    }
+    };
 
     if (this.playing) return 0;
 

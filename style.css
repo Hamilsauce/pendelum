@@ -6,6 +6,7 @@ var(--accent-white40);
   --primary: #283038;
   --accent-white: #F3F3F3;
   --accent-white40: #FEF3F340;
+  --accent-white99: #FEF3F399;
 }
 
 * {
@@ -39,6 +40,11 @@ body {
   color: var(--accent-white);
   font-size: 18px;
   overflow: hidden;
+}
+
+input[type=checkbox] {
+  background: #E38D16;
+  filter: hue-rotate(191deg) brightness(1.08);
 }
 
 a {
@@ -100,7 +106,7 @@ a {
   justify-content: space-around;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 0px;
   padding: 4px 0px;
   overflow: hidden;
 }
@@ -115,7 +121,7 @@ a {
   width: 100%;
   max-width: 500px;
   height: 100%;
-  padding: 0px 0px 0px;
+  padding: 0px 8px 0px;
 }
 
 
@@ -170,35 +176,39 @@ a {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  /* gap: 4px; */
-  /* width: 100%; */
-  height: 32px;
+  gap: 0px;
+  height: 24px;
   color: #F0F0F0C9;
   border: 1px solid var(--accent-white40);
-  /* padding: 2px 4px; */
-  border-radius: 6px;
+  padding: 4px 0px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .control-group>* {
   font-size: 13px;
-  /* color: var(--accent-white); */
+}
+
+.control-group>*:nth-child(2) {
+  /* background: #F0F0F0; */
+  /* filter: brightness(0.9); */
+  /* color: var(--primary); */
+  color: #E38D16;
 }
 
 .control-group>label {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  gap: 0px;
   width: 100%;
   height: 100%;
-  /* text-align: center; */
+  font-size: 14px;
   font-weight: 800;
   padding: 2px 4px 2px 4px;
   /* background: var(--accent-white); */
   /* color: var(--primary); */
-/* filter: opacity(1) invert(0.8); */
+  /* filter: opacity(1) invert(0.8); */
   /* color: vaár(--accent-white); */
 }
 
@@ -238,8 +248,6 @@ a {
 #oscillator-input {
   padding: 4px 6px;
   background: none;
-  color: var(--accent-white);
-  /* font-size: 15px; */
   text-align: center;
   border: none;
   border-left: 1px solid #F0F0F03D;
@@ -248,7 +256,6 @@ a {
 .app-input {
   width: 48px;
   background: none;
-  /* font-size: 14px; */
   color: var(--accent-white);
   border: none;
   border-left: 1px solid #F0F0F03D;
@@ -326,10 +333,9 @@ svg {
   fill: #2D36D700;
   stroke: #FFFFFF;
   stroke-width: 2px;
-  /* pointer-events: none; */
+  pointer-events: none;
 }
 
 #params-button:active {
-
   filter: brightness(2);
 }

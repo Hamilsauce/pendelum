@@ -8,10 +8,15 @@ import {
   // anim2,
   // dot2
 } from './components/rx-pendulum.js';
+import { getSynthParamsStore } from './store/synth-params/synth-params.store.js';
+import { updateDuration, updateOscillator, updateDelay, updateWarbler } from './store/synth-params/synth-params.actions.js';
+
 
 const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
+
+const paramsStore = getSynthParamsStore()
 
 const pbButton = new PlaybackButton();
 
@@ -98,29 +103,28 @@ export class App {
     if (input && input.dataset.param === 'duration') {
       const param = input.dataset.param;
       const value = coerce(input.value);
+ 
+      paramsStore.dispatch(updateDuration({ time: value }));
 
       anim.duration = value;
     }
 
     else if (input && input.dataset.param === 'oscillator') {
       const param = input.dataset.param;
-      const value = coerce(input.value);
-
-      this.audio.setType({ type: value });
+      const value = coerce(input.selectedOptions[0].value);
+   
+      paramsStore.dispatch(updateOscillator({oscillator:{ type: value }}));
     }
 
     else if (input && input.dataset.param === 'delayTime') {
       const param = input.dataset.param;
       const value = coerce(input.value);
-
-      this.audio.setDelay({time: value});
+      
+      paramsStore.dispatch(updateDelay({ time: value }));
     }
+    
     else if (input && input.dataset.param === 'warbler') {
-
-      // const param = input.dataset.param;
-      // const value = coerce(input.value);
-
-      this.audio.toggleWarbler(e.target.checked);
+      paramsStore.dispatch(updateWarbler({ active: e.target.checked }));
     }
   }
 
