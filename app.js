@@ -1,5 +1,5 @@
 import { AudioController } from './components/AudioController.js'
-import { noteDataSets } from './data/data.js';
+import { noteDataSets } from './data/notes.data.js';
 import { PlaybackButton } from './components/PlaybackButton.js';
 import { roundTwo, coerce } from './lib/utils.js';
 import {

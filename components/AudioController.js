@@ -1,5 +1,7 @@
 import { getSynthParamsStore } from '../store/synth-params/synth-params.store.js';
+import { noteDataSets } from '../data/notes.data.js';
 
+const { getArpeggio, frequencyMap } = noteDataSets
 const paramsStore = getSynthParamsStore()
 
 const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
@@ -61,6 +63,7 @@ export class AudioController {
     this.lastFreq = this.#oscillator.frequency.value;
 
     this.toggleWarbler(true)
+    // this.arp(true)
 
     this.setFrequency = this.#setFrequency.bind(this);
 
@@ -90,13 +93,55 @@ export class AudioController {
     this.playing = true;
   }
 
+  arp(state = true) {
+    if (state) {
+      // clearInterval(this.warblerIntervalHandle || 0);
+
+      this.warblerIntervalHandle = setInterval(() => {
+        let freq = this.#oscillator.frequency.value
+        freq = this.#oscillator.frequency.value * 1.67
+
+        this.#gains.oscillator.gain.exponentialRampToValueAtTime(
+          0.0036,
+          this.#ctx.currentTime + 0.025
+        );
+
+        this.#oscillator.frequency.exponentialRampToValueAtTime(
+          // freq * this.#oscillator.frequency.value * 1.67,
+          0,
+          this.#ctx.currentTime + 0.025
+        );
+
+        // setTimeout(() => {
+        //   this.#gains.oscillator.gain.exponentialRampToValueAtTime(
+        //     0.0002,
+        //     this.#ctx.currentTime + 0.075
+        //   );
+
+        //   this.#oscillator.frequency.exponentialRampToValueAtTime(
+        //     this.#oscillator.frequency.value * 0.67,
+        //     this.#ctx.currentTime + 0.025
+        //   );
+        // }, 150)
+
+      }, 125);
+
+    } else {
+      clearInterval(this.warblerIntervalHandle);
+    }
+    // this.arp(true)
+  }
+
   toggleWarbler(state) {
     if (state) {
       clearInterval(this.warblerIntervalHandle || 0);
 
       this.warblerIntervalHandle = setInterval(() => {
         let freq = this.#oscillator.frequency.value
+        // const note = frequencyMap.get(Math.trunc(freq)) || {}
+        // const arp = getArpeggio(note.pitch)
 
+        // console.log('arp', [...arp]);
         this.#gains.oscillator.gain.exponentialRampToValueAtTime(
           0.0036,
           this.#ctx.currentTime + 0.025
