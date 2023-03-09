@@ -278,7 +278,7 @@ a {
   height: 100%;
   overflow: hidden;
   border: 2px solid var(--primary);
-  /* border-radius: 6px; */
+  border-radius: 6px;
   /* padding: 4px; */
 }
 
@@ -306,11 +306,31 @@ svg {
 
 .curve {
   stroke: #E8C313;
+  fill: #AFD2F01C;
+  /* backdrop-filter: blur(5px); */
+  /* filter: drop-shadow(10px 10px ) */
+  filter: drop-shadow(1px 1px 2px  #000000);
+}
+
+.path-point {
+  fill: #DCC32E;
+  filter: drop-shadow(0 0 0.75px #303333) hue-rotate(-20deg) invert(0);
+  
+/* filter: drop-shadow(1px 1px 1px #FF0000); */
+  
+}
+
+.control-point{
   fill: transparent;
+  fill: #E4E2DB;
+  stroke-width: 1.5px;
+  stroke: #E6E2D6CC;
+  r: 3.5px;
+filter: brightness(1.4);
 }
 
 #surface-layer {
-  filter: blur(0.075px);
+  filter: blur(0.065px);
 }
 
 .hud-text {
@@ -329,17 +349,20 @@ svg {
 }
 
 #dot {
-  fill: #F7F7F7;
+  fill: #FFFFFF;
   stroke: #FFFFFF;
-  stroke-width: 2px;
+  r: 3.25px;
+  /* stroke-width: 2px; */
+  stroke-width: 0.25px;
   pointer-events: none;
+  filter: drop-shadow(0 0 7px #FFF1D7C7) hue-rotate(0deg) invert(0);
 }
 
 
 #dot2 {
   fill: #2D36D700;
-  stroke: #FFFFFF;
-  stroke-width: 2px;
+  /* stroke: #FFFFFF; */
+  stroke-width: 0.15px;
   pointer-events: none;
 }
 
