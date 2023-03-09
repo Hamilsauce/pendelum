@@ -49,8 +49,8 @@ svg {
 }
 
 .knob{
-  stroke: #363636;
-  stroke-width: 2px;
+  stroke: #565656;
+  stroke-width: 1px;
   fill: #363636;
 }
 
@@ -58,4 +58,10 @@ svg {
   stroke: #FFFFFF;
   stroke-width: 1px;
   fill: #FFFFFF;
+}
+.dial-value{
+  stroke: #FFFFFF;
+  stroke-width: 0.1px;
+  /* fill: #FFFFFF; */
+  font-size: 4.25px;
 }

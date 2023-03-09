@@ -41,6 +41,11 @@ body {
   overflow: hidden;
 }
 
+a {
+  text-decoration: none;
+  color: var(--accent-white);
+}
+
 .app-button {
   display: flex;
   flex-direction: row;
@@ -96,7 +101,7 @@ body {
   justify-content: center;
   align-items: center;
   gap: 8px;
-  padding: 8px;
+  padding: 4px 0px;
   overflow: hidden;
 }
 
@@ -104,12 +109,13 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   gap: 8px;
   width: 100%;
   max-width: 500px;
   height: 100%;
-  padding: 0px 8px 0px;
+  padding: 0px 0px 0px;
 }
 
 
@@ -131,6 +137,23 @@ body {
   white-space: nowrap;
 }
 
+.app-header-row.bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+}
+
+#param-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 #app-title {
   display: flex;
   flex-direction: row;
@@ -141,16 +164,42 @@ body {
   height: 100%;
 }
 
+
 .control-group {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  /* gap: 4px; */
+  /* width: 100%; */
+  height: 32px;
   color: #F0F0F0C9;
   border: 1px solid var(--accent-white40);
-  padding: 2px 4px;
+  /* padding: 2px 4px; */
   border-radius: 6px;
+  overflow: hidden;
+}
+
+.control-group>* {
+  font-size: 13px;
+  /* color: var(--accent-white); */
+}
+
+.control-group>label {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+  width: 100%;
+  height: 100%;
+  /* text-align: center; */
+  font-weight: 800;
+  padding: 2px 4px 2px 4px;
+  /* background: var(--accent-white); */
+  /* color: var(--primary); */
+/* filter: opacity(1) invert(0.8); */
+  /* color: vaár(--accent-white); */
 }
 
 .field-group {
@@ -174,7 +223,7 @@ body {
   width: fit-content;
   min-width: 60px;
   gap: 8px;
-  font-size: 14px;
+  /* font-size: 14px; */
   font-weight: 600;
   color: #F0F0F0C9;
   padding: 4px;
@@ -190,21 +239,20 @@ body {
   padding: 4px 6px;
   background: none;
   color: var(--accent-white);
-  font-size: 15px;
+  /* font-size: 15px; */
   text-align: center;
   border: none;
   border-left: 1px solid #F0F0F03D;
 }
 
 .app-input {
-  width: 60px;
-  padding: 4px;
+  width: 48px;
   background: none;
-  font-size: 15px;
+  /* font-size: 14px; */
   color: var(--accent-white);
   border: none;
   border-left: 1px solid #F0F0F03D;
-  padding: 4px 6px;
+  padding: 4px 0;
   text-align: center;
 }
 
@@ -279,4 +327,9 @@ svg {
   stroke: #FFFFFF;
   stroke-width: 2px;
   /* pointer-events: none; */
+}
+
+#params-button:active {
+
+  filter: brightness(2);
 }

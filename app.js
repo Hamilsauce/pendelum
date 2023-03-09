@@ -85,7 +85,7 @@ export class App {
     anim.start(+this.params.duration.value);
 
     this.self.addEventListener('change', this.onParamChange);
-    
+
     pbButton.dom.addEventListener('click', this.onPlaybackChange);
 
     window.onblur = () => this.togglePlayback(false);
@@ -107,6 +107,20 @@ export class App {
       const value = coerce(input.value);
 
       this.audio.setType({ type: value });
+    }
+
+    else if (input && input.dataset.param === 'delayTime') {
+      const param = input.dataset.param;
+      const value = coerce(input.value);
+
+      this.audio.setDelay({time: value});
+    }
+    else if (input && input.dataset.param === 'warbler') {
+
+      // const param = input.dataset.param;
+      // const value = coerce(input.value);
+
+      this.audio.toggleWarbler(e.target.checked);
     }
   }
 
@@ -131,22 +145,6 @@ export class App {
     else {
       this.audio.resume();
       anim.start();
-    }
-
-    const input = e.target.closest('[data-param]');
-
-    if (input && input.dataset.param === 'duration') {
-      const param = input.dataset.param;
-      const value = coerce(input.value);
-
-      anim.duration = value;
-    }
-
-    else if (input && input.dataset.param === 'oscillator') {
-      const param = input.dataset.param;
-      const value = coerce(input.value);
-
-      this.audio.setType({ type: value });
     }
   }
 }

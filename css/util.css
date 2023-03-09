@@ -4,3 +4,8 @@
 .flex-end {
   justify-content: flex-end;
 }
+
+.thin {
+  font-size: 16px;
+  font-weight: 400;
+}

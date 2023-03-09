@@ -21,22 +21,35 @@
       <div class="app-header-row" id="app-header-top">
         <h3 id="app-title">Pendulum Synth</h3>
       </div>
-      <div class="app-header-row">
+      <div class="app-header-row" id="param-row">
         <div class="control-group">
-          <label for="duration-input">Duration</label>
+          <label for="duration-input">Dur</label>
           <input type="text" name="duration-input" class="app-input" id="duration-input" data-param="duration" value="1000">
         </div>
         <div class="control-group">
+          <label for="delay-time-input">Delay Time</label>
+          <input type="text" name="delay-time-input" class="app-input" id="delay-time-input" data-param="delayTime" value="0.3">
+        </div>
+        <div class="control-group">
           <label for="oscillator-input">Oscillator</label>
-          <select type="text" name="oscillator-input" id="oscillator-input" data-param="oscillator">
+          <select type="text" class="control-input" name="oscillator-input" id="oscillator-input" data-param="oscillator">
             <option value="triangle">Triangle</option>
             <option value="sine">Sine</option>
             <option value="sawtooth">Sawtooth</option>
           </select>
         </div>
+        <div class="control-group">
+          <label for="warbler-input">Warbler</label>
+          <input type="checkbox" checked name="warbler-input" class="app-input" id="warbler-input" data-param="warbler">
+        </div>
       </div>
-      <div class="app-header-row flex-end">
+      <div class="app-header-row bottom" id="">
+        <!-- <div class="control-group">
+          <label id="params-button">Params</label>
+          <button name="params-button" class="app-button thin" id="params-button" value="Params">Params</button>
+        </div> -->
         <div id="playback-controls"></div>
+
         <!-- <div _class="control-group" id="param-selector">
           <div id="group">
             <select name="param-name-select" id="param-name-select">
@@ -140,7 +153,7 @@
     </section>
     <footer id="app-footer">
       <div class="container">
-        HAMILSAUCE 2022
+        <a href="https://hamilsauce.github.io/">HAMILSAUCE 2022</a>
       </div>
     </footer>
   </div>

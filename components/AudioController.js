@@ -66,33 +66,7 @@ export class AudioController {
 
     this.lastFreq = this.#oscillator.frequency.value;
 
-    let cnt = 0;
-
-    setInterval(() => {
-      if (this.#gains.oscillator.gain.value > 0.01) {
-        // this.#gains.oscillator.gain.setValueCurveAtTime(getCurve(...curves.down), this.#ctx.currentTime, 0.01);
-        this.#gains.oscillator.gain.exponentialRampToValueAtTime(
-          0.0001,
-          this.#ctx.currentTime + 0.25
-        );
-      }
-
-      else {
-        if (cnt % 3 === 0) {
-          this.lastFreq = this.#oscillator.frequency.value;
-
-          this.#oscillator.frequency.value = this.#oscillator.frequency.value * 1.5;
-        } else {
-          this.#oscillator.frequency.value = this.lastFreq;
-        }
-
-        this.#gains.oscillator.gain.exponentialRampToValueAtTime(
-          0.5,
-          this.#ctx.currentTime + 0.25
-        );
-      }
-      cnt++
-    }, 120);
+    this.toggleWarbler(true)
 
     this.setFrequency = this.#setFrequency.bind(this);
   }
@@ -108,6 +82,28 @@ export class AudioController {
   play() {
     this.#oscillator.start(this.#ctx.currentTime);
     this.playing = true;
+  }
+
+  toggleWarbler(state) {
+    if (state) {
+      this.warblerIntervalHandle = setInterval(() => {
+        let freq = this.#oscillator.frequency.value
+
+        this.#gains.oscillator.gain.exponentialRampToValueAtTime(
+          0.16,
+          this.#ctx.currentTime + 0.5
+        );
+
+        this.#oscillator.frequency.exponentialRampToValueAtTime(this.#oscillator.frequency.value * 2, this.#ctx.currentTime + 1.25);
+
+        setTimeout(() => {
+          this.#oscillator.frequency.exponentialRampToValueAtTime(freq, this.#ctx.currentTime + 1.5);
+        }, 1000)
+
+      }, 100);
+    } else {
+      clearInterval(this.warblerIntervalHandle);
+    }
   }
 
   removeGain(gain) {
@@ -152,6 +148,15 @@ export class AudioController {
 
   setParams(paramMap) {
     Object.assign(this, paramMap);
+  }
+
+  setDelay({ time, level }) {
+    if (time) {
+      this.#delay.delayTime.value = time;
+    }
+    if (level) {
+      this.#gains.delay.gain.value = level;
+    }
   }
 
   changeNote(note, frequency) {
