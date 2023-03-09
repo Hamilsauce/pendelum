@@ -98,28 +98,28 @@ export class AudioController {
         let freq = this.#oscillator.frequency.value
 
         this.#gains.oscillator.gain.exponentialRampToValueAtTime(
-          0.08,
-          this.#ctx.currentTime + 0.08
+          0.026,
+          this.#ctx.currentTime + 0.025
         );
 
         this.#oscillator.frequency.exponentialRampToValueAtTime(
           this.#oscillator.frequency.value * 1.67,
-          this.#ctx.currentTime + 0.32
+          this.#ctx.currentTime + 0.075
         );
 
         setTimeout(() => {
           this.#gains.oscillator.gain.exponentialRampToValueAtTime(
-            0.0001,
-            this.#ctx.currentTime + 0.08
+            0.001,
+            this.#ctx.currentTime + 0.025
           );
 
           this.#oscillator.frequency.exponentialRampToValueAtTime(
             this.#oscillator.frequency.value * 0.67,
-            this.#ctx.currentTime + 0.08
+            this.#ctx.currentTime + 0.05
           );
-        }, 50)
+        }, 75)
 
-      }, 125);
+      }, 150);
     } else {
       clearInterval(this.warblerIntervalHandle);
     }
