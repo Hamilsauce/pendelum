@@ -93,7 +93,7 @@ export class AudioController {
     this.playing = true;
   }
 
-  arp(state = true) {
+  _arp(state = true) {
     if (state) {
       // clearInterval(this.warblerIntervalHandle || 0);
 

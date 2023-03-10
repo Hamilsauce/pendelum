@@ -316,7 +316,7 @@ svg {
   fill: #DCC32E;
   filter: drop-shadow(0 0 0.75px #303333) hue-rotate(-8deg) invert(0);
   stroke: #FFFFFF;
-  stroke-width: 1.0px;
+  /* stroke-width: 1.0px; */
 
   /* filter: drop-shadow(1px 1px 1px #FF0000); */
 
@@ -325,10 +325,10 @@ svg {
 .control-point {
   fill: transparent;
   fill: #E4E2DB;
-  stroke-width: 1.5px;
+  stroke-width: 0px;
   stroke: #E6E2D6CC;
   stroke: #E4E2DB;
-  r: 3.5px;
+  r: 5.5px;
   filter: brightness(1.8);
 }
 

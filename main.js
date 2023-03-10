@@ -1,6 +1,6 @@
 import { App } from './app.js';
 import { SvgCanvas } from './components/SvgCanvas.js';
-
+import {} from './lib/create-rhythm.js';
 
 
 const initApp = async () => {
