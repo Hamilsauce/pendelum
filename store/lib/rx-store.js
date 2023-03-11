@@ -31,7 +31,7 @@ class BhsStore extends BehaviorSubject {
       .pipe(
         map(action => this.#reducer(this.snapshot(), action)),
         tap(newState => this.next(newState, AUTH_KEY)),
-        tap(x => console.warn('reducePipe$', x)),
+        // tap(x => console.warn('reducePipe$', x)),
       );
 
     this.#stateSubscription = this.#reducePipe$.subscribe();
