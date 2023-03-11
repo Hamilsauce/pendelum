@@ -1,7 +1,6 @@
-import { getSynthParamsStore } from '../store/synth-params/synth-params.store.js';
 import { noteDataSets } from '../data/notes.data.js';
-
-const { getArpeggio, frequencyMap } = noteDataSets
+const { getArpeggio, frequencyMap, getTriad } = noteDataSets
+import { getSynthParamsStore } from '../store/synth-params/synth-params.store.js';
 const paramsStore = getSynthParamsStore()
 
 const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
@@ -53,7 +52,7 @@ export class AudioController {
     this.#gains.oscillator.connect(this.#ctx.destination);
     this.#gains.delay.connect(this.#ctx.destination);
 
-    this.#gainstash.push(this.#gain);
+    // this.#gainstash.push(this.#gain);
 
     const curves = {
       up: [0.0, 0.1, 0.225, 0.325, 0.4, 0.5],
@@ -71,7 +70,7 @@ export class AudioController {
 
     this.params$
       .pipe(
-        tap(({ oscillator, delay, warbler }) => {
+        tap(({ volume, oscillator, delay, warbler }) => {
           this.setOscillator(oscillator);
           this.setDelay(delay);
           this.setWarbler(warbler);
@@ -107,23 +106,9 @@ export class AudioController {
         );
 
         this.#oscillator.frequency.exponentialRampToValueAtTime(
-          // freq * this.#oscillator.frequency.value * 1.67,
           0,
           this.#ctx.currentTime + 0.025
         );
-
-        // setTimeout(() => {
-        //   this.#gains.oscillator.gain.exponentialRampToValueAtTime(
-        //     0.0002,
-        //     this.#ctx.currentTime + 0.075
-        //   );
-
-        //   this.#oscillator.frequency.exponentialRampToValueAtTime(
-        //     this.#oscillator.frequency.value * 0.67,
-        //     this.#ctx.currentTime + 0.025
-        //   );
-        // }, 150)
-
       }, 125);
 
     } else {
@@ -141,7 +126,6 @@ export class AudioController {
         // const note = frequencyMap.get(Math.trunc(freq)) || {}
         // const arp = getArpeggio(note.pitch)
 
-        // console.log('arp', [...arp]);
         this.#gains.oscillator.gain.exponentialRampToValueAtTime(
           0.0036,
           this.#ctx.currentTime + 0.025
@@ -216,7 +200,8 @@ export class AudioController {
       this.#oscillator.type = type;
     }
     if (level) {
-      this.#gains.oscillator.gain.value = level;
+      // this.#gains.oscillator.gain.value = level;
+      this.#gains.oscillator.gain.exponentialRampToValueAtTime(level, this.#ctx.currentTime + 0.1)
     }
   }
 
@@ -225,7 +210,8 @@ export class AudioController {
       this.#delay.delayTime.value = time;
     }
     if (level) {
-      this.#gains.delay.gain.value = level;
+      this.#gains.delay.gain.exponentialRampToValueAtTime(level, this.#ctx.currentTime + 0.1)
+      // this.#gains.delay.gain.value = level;
     }
   }
 

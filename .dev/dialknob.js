@@ -45,13 +45,13 @@ const pointerEvents$ = pointerDown$.pipe(
 
         let deg = prev.deg;
 
-        const isDialingOverMax = prev.deg >= 135 && (delta.x > 0 || delta.y < 0)
-        const isDialingUnderMin = prev.deg <= -135 && (delta.x < 0 || delta.y > 0)
+        const isDialingOverMax = prev.deg >= 135 && (delta.x > 0)
+        const isDialingUnderMin = prev.deg <= -135 && (delta.x<0)
         // console.log('isDialingOverMax', isDialingOverMax)
         // console.log('isDialingUnderMin', isDialingUnderMin)
         // console.log('prev.deg', prev.deg)
         if (isDialingOverMax || isDialingUnderMin) {
-          deg = prev.deg 
+          deg = prev.deg
         } else {
           deg = delta.x > 0 ? prev.deg + 9 : delta.x < 0 ? prev.deg - 9 : prev.deg;
 
@@ -60,10 +60,11 @@ const pointerEvents$ = pointerDown$.pipe(
         return { ...delta, deg }
       }, { x: 0, y: 0, deg: currentRotation }),
       tap(({ deg }) => {
-        dialKnob.querySelector('.dial').setAttribute('transform', `rotate(${deg})`);
+        // dialKnob.querySelector('.dial-knob').setAttribute('transform', `rotate(${deg})`);
+        dialKnob.setAttribute('transform', `rotate(${deg})`);
         dialKnob.querySelector('.dial-value').innerHTML = deg;
       }),
-      tap(x => console.log('[[  VALUE  ]]', (x.deg / 360) * 100)+105),
+      tap(x => console.log('[[  VALUE  ]]', (x.deg / 360) * 100) + 105),
       switchMap(movePoint => pointerUp$
         .pipe(
           tap(() => {

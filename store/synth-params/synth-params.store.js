@@ -2,6 +2,9 @@ import { defineStore } from '../lib/rx-store.js';
 
 
 const initialParamsState = {
+  volume: {
+    level: 0.5,
+  },
   duration: {
     time: 1000
   },
@@ -15,7 +18,7 @@ const initialParamsState = {
     time: 0.25,
   },
   warbler: {
-    active: true,
+    active: document.querySelector('#warbler-input').checked,
     level: 0.3,
     time: 10,
     modifier: 1.25,
@@ -25,6 +28,18 @@ const initialParamsState = {
 
 const synthParamsReducer = (state, action) => {
   switch (action.type) {
+    case 'volume': {
+      const { level } = action;
+      if (!level) return { ...state };
+
+      return {
+        ...state,
+        volume: { ...state.volume, level  },
+        delay: { ...state.delay, level  },
+        oscillator: { ...state.oscillator, level  },
+      };
+    }
+
     case 'duration': {
       const { time } = action;
 

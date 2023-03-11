@@ -48,18 +48,24 @@ svg {
   touch-action: none;
 }
 
-.knob{
+.dial-knob,
+.dial-knob {
+  /* transform-origin: 50% 50%; */
+}
+
+.knob {
   stroke: #565656;
   stroke-width: 1px;
   fill: #363636;
 }
 
-.dial{
+.dial {
   stroke: #FFFFFF;
   stroke-width: 1px;
   fill: #FFFFFF;
 }
-.dial-value{
+
+.dial-value {
   stroke: #FFFFFF;
   stroke-width: 0.1px;
   /* fill: #FFFFFF; */

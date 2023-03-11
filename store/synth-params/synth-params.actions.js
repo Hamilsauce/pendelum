@@ -6,6 +6,12 @@ export const updateDuration = createAction(
   }
 )
 
+export const updateVolume = createAction(
+  'volume', {
+    level: Number
+  }
+)
+
 export const updateOscillator = createAction(
   'oscillator', {
     oscillator: Object,

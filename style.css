@@ -61,10 +61,10 @@ a {
   padding: 4px 4px;
   font-size: 18px;
   font-weight: 600;
-  background: var(--accent-white);
+  /* background: var(--accent-white); */
   background: var(--primary);
   color: var(--accent-white);
-  border: 1px solid var(--accent-white);
+  /* border: 1px solid var(--accent-white); */
   border: none;
   text-transform: uppercase;
 }
@@ -108,7 +108,12 @@ a {
   align-items: center;
   gap: 0px;
   padding: 4px 4px;
-  overflow: hidden;
+  /* overflow: hidden; */
+}
+
+.app-header-row,
+.app-header-row * {
+  z-index: 110;
 }
 
 .app-header-row {
@@ -122,6 +127,7 @@ a {
   max-width: 500px;
   height: 100%;
   padding: 0px 8px 0px;
+  z-index: 110;
 }
 
 
@@ -279,6 +285,7 @@ a {
   overflow: hidden;
   border: 2px solid var(--primary);
   border-radius: 6px;
+  
   /* padding: 4px; */
 }
 
@@ -302,6 +309,10 @@ a {
 
 svg {
   touch-action: none;
+  z-index: 0;
+}
+svg * {
+  z-index: 0;
 }
 
 .curve {
@@ -369,6 +380,51 @@ svg {
   pointer-events: none;
 }
 
-#params-button:active {
-  filter: brightness(2);
+
+#playback-controls svg {
+  /* border: 1px solid #D3D4E5; */
+  
+}
+#playback-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  /* filter: brightness(2); */
+  z-index: 120;
+}
+
+#volume-input {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;  
+  align-items: flex-start;
+  gap: 8px;
+  width: 34px;
+  height: 34px;
+  /* border: 1px solid #D3D4E5; */
+  z-index: 120;
+  transition: 0.2s;
+  /* overflow: hidden; */
+}
+
+#volume-range {
+  /* position: absolute; */
+  top: 0px;
+  left: 0;
+  width: 0px;
+  /* transform: translate(-30px, 30px) rotate(90deg); */
+  filter: invert(1);
+  z-index: 110;
+  
+  transition: 0.2s;
+/* overflow: none; */
+}
+
+#grid {
+  pointer-events: none;
 }

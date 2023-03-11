@@ -1,6 +1,7 @@
 import { AudioController } from './components/AudioController.js'
 import { noteDataSets } from './data/notes.data.js';
 import { PlaybackButton } from './components/PlaybackButton.js';
+import { VolumeButton } from './components/VolumeButton.js';
 import { roundTwo, coerce } from './lib/utils.js';
 import {
   anim,
@@ -16,12 +17,18 @@ const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, inter
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
 
+
 const paramsStore = getSynthParamsStore()
 
 const pbButton = new PlaybackButton();
+const volumeButton = new VolumeButton();
 
 const playbackControls = document.querySelector('#playback-controls');
-playbackControls.append(pbButton.dom);
+// playbackControls.append(pbButton.dom);
+playbackControls.append(
+  volumeButton.dom,
+  pbButton.dom,
+);
 
 export class App {
   self = document.querySelector('#app');
@@ -103,7 +110,7 @@ export class App {
     if (input && input.dataset.param === 'duration') {
       const param = input.dataset.param;
       const value = coerce(input.value);
- 
+
       paramsStore.dispatch(updateDuration({ time: value }));
 
       anim.duration = value;
@@ -112,17 +119,17 @@ export class App {
     else if (input && input.dataset.param === 'oscillator') {
       const param = input.dataset.param;
       const value = coerce(input.selectedOptions[0].value);
-   
-      paramsStore.dispatch(updateOscillator({oscillator:{ type: value }}));
+
+      paramsStore.dispatch(updateOscillator({ oscillator: { type: value } }));
     }
 
     else if (input && input.dataset.param === 'delayTime') {
       const param = input.dataset.param;
       const value = coerce(input.value);
-      
+
       paramsStore.dispatch(updateDelay({ time: value }));
     }
-    
+
     else if (input && input.dataset.param === 'warbler') {
       paramsStore.dispatch(updateWarbler({ active: e.target.checked }));
     }
