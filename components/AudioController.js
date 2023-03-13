@@ -2,7 +2,7 @@ import { noteDataSets } from '../data/notes.data.js';
 const { getArpeggio, frequencyMap, getTriad } = noteDataSets
 import { getSynthParamsStore } from '../store/synth-params/synth-params.store.js';
 const paramsStore = getSynthParamsStore()
-
+import { getArpRhythm } from '../lib/create-rhythm.js';
 const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 
@@ -77,6 +77,8 @@ export class AudioController {
         }),
       )
       .subscribe();
+
+
   }
 
   get oscillatorTypes() { return ['sine', 'sawtooth', 'triangle'] }
@@ -171,13 +173,23 @@ export class AudioController {
       this.playing = false;
     }
   }
+  
+  toggleNode({ name, state }) {
+    if (name === 'delay') {
+      const value = state ? 0.3 : 0.00001
+       this.#gains.delay.gain.exponentialRampToValueAtTime(value, this.#ctx.currentTime + 0.1)
+    }
+  }
 
   #setFrequency({ frequency }) {
     this.#oscillator.frequency.value = frequency;
 
+    // setInterval(() => {
+
+    //   console.log(' ',);}, 2500)
+
     return frequency;
   }
-
 
   setType({ type }) {
     this.#oscillator.type = v;
@@ -194,7 +206,7 @@ export class AudioController {
       this.toggleWarbler(active)
     }
   }
-
+  
   setOscillator({ type, level }) {
     if (type) {
       this.#oscillator.type = type;
@@ -204,6 +216,7 @@ export class AudioController {
       this.#gains.oscillator.gain.exponentialRampToValueAtTime(level, this.#ctx.currentTime + 0.1)
     }
   }
+  
 
   setDelay({ time, level }) {
     if (!isNaN(+time)) {

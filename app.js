@@ -11,6 +11,7 @@ import {
 } from './components/rx-pendulum.js';
 import { getSynthParamsStore } from './store/synth-params/synth-params.store.js';
 import { updateDuration, updateOscillator, updateDelay, updateWarbler } from './store/synth-params/synth-params.actions.js';
+import { getArpRhythm } from './lib/create-rhythm.js';
 
 
 const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
@@ -24,7 +25,7 @@ const pbButton = new PlaybackButton();
 const volumeButton = new VolumeButton();
 
 const playbackControls = document.querySelector('#playback-controls');
-// playbackControls.append(pbButton.dom);
+
 playbackControls.append(
   volumeButton.dom,
   pbButton.dom,
@@ -52,7 +53,18 @@ export class App {
 
     this.startButton.addEventListener('click', this.onStart);
 
+    const controlGroups = [...document.querySelectorAll('.control-group')]
+    const delayTimeLabel = document.querySelector('#delay-time-label')
+    
+    delayTimeLabel.addEventListener('click', e => {
+      const t = e.target
+      const currState = t.dataset.active === 'true' ? true : false;
+      t.dataset.active = !currState
+      
+      this.audio.toggleNode({ name: 'delay', state: !currState })
 
+
+    });
     // window.onbeforeunload = (e) => {
     //   this.audio.suspend()
     // }
@@ -78,8 +90,24 @@ export class App {
 
     this.frequency$ = dot.init('dot', 'curve');
 
+
+    const arp$ = getArpRhythm().pipe(
+      // map(x => x),
+      // tap(x => console.log('getArpRhythm', x)),
+      // tap(frequency => this.#oscillator.frequency.value = frequency),
+      // map(this.audio.setFrequency),
+    )
+    // .subscribe();
+
+    // console.log('arp$', arp$)
+
     dot.frequency$.pipe(
-      map(this.audio.setFrequency),
+      // tap(x => console.log('x', x)),
+      // mergeMap(({ frequency }) => arp$.pipe(
+      //   map(x => x),
+      //   tap(x => console.log('TAP', x)),
+      // ), ),
+      tap(this.audio.setFrequency),
       tap(freq => {
         const truncFreq = Math.trunc(freq)
         const note = noteDataSets.frequencyMap.get(truncFreq)
@@ -92,6 +120,7 @@ export class App {
           this.frequencyDisplay.textContent = this.frequencyDisplay.textContent
         }
       }),
+
     ).subscribe();
 
     anim.start(+this.params.duration.value);
