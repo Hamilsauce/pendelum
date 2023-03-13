@@ -55,21 +55,16 @@ export class App {
 
     const controlGroups = [...document.querySelectorAll('.control-group')]
     const delayTimeLabel = document.querySelector('#delay-time-label')
-    
+
     delayTimeLabel.addEventListener('click', e => {
       const t = e.target
       const currState = t.dataset.active === 'true' ? true : false;
       t.dataset.active = !currState
-      
+
       this.audio.toggleNode({ name: 'delay', state: !currState })
 
 
     });
-    // window.onbeforeunload = (e) => {
-    //   this.audio.suspend()
-    // }
-
-    // window.onfocus = this.togglePlayback;
   }
 
   get params() {
@@ -107,7 +102,7 @@ export class App {
       //   map(x => x),
       //   tap(x => console.log('TAP', x)),
       // ), ),
-      tap(this.audio.setFrequency),
+      map(this.audio.setFrequency),
       tap(freq => {
         const truncFreq = Math.trunc(freq)
         const note = noteDataSets.frequencyMap.get(truncFreq)
