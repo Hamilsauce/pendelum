@@ -60,6 +60,7 @@ export class App {
     const durationLabel = document.querySelector('#duration-label')
     const delayTimeLabel = document.querySelector('#delay-time-label')
     const waveTypeLabel = document.querySelector('#wave-type-label')
+    const warblerLabel = document.querySelector('#warbler-label')
 
     waveTypeLabel.addEventListener('click', e => {
       const t = e.target
@@ -90,6 +91,16 @@ export class App {
       p.dataset.active = !currState
       p.querySelector('input').disabled = p.dataset.active == 'false' ? true : false;
       this.audio.toggleNode({ name: 'delay', state: !currState })
+    });
+
+    warblerLabel.addEventListener('click', e => {
+      const t = e.target
+      const p = t.closest('.control-group');
+
+      const currState = p.dataset.active === 'true' ? true : false;
+      p.dataset.active = !currState
+      paramsStore.dispatch(updateWarbler({ active: !currState }))
+      // this.audio.toggleNode({ name: 'delay', state: !currState })
     });
   }
 
@@ -181,7 +192,7 @@ export class App {
     }
 
     else if (input && input.dataset.param === 'warbler') {
-      paramsStore.dispatch(updateWarbler({ active: e.target.checked }));
+      paramsStore.dispatch(updateWarbler({ active: e.target.closest('.control-group') }));
     }
   }
 

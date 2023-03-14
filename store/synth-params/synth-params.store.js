@@ -18,7 +18,7 @@ const initialParamsState = {
     time: 0.25,
   },
   warbler: {
-    active: document.querySelector('#warbler-input').checked,
+    active: false,
     level: 0.3,
     time: 10,
     modifier: 1.25,

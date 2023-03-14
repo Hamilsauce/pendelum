@@ -40,23 +40,23 @@
           </select>
         </div>
         <div class="control-group" data-active="false">
-          <label for="warbler-input">Warbler</label>
-          <input type="checkbox" name="warbler-input" class="app-input" id="warbler-input" data-param="warbler">
+          <label id="warbler-label" for="warbler-input">Warbler</label>
+          <!-- <input type="checkbox" name="warbler-input" class="app-input" id="warbler-input" data-param="warbler"> -->
         </div>
       </div>
       <div class="app-header-row bottom" id="">
         <div id="playback-controls"></div>
-         <div id="menu">
-           <button id="menu-button" class="app-button">
-             <svg id="ellipsis-icon" width="24" height="18" viewBox="3 1.5 16 22" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-               <g>
-                 <circle r="2.5" cy="4" cx="12" />
-                 <circle r="2.5" cy="12" cx="12" />
-                 <circle r="2.5" cy="20" cx="12" />
-               </g>
-             </svg>
-           </button>
-         </div>
+        <div id="menu">
+          <button id="menu-button" class="app-button">
+            <svg id="ellipsis-icon" width="24" height="18" viewBox="3 1.5 16 22" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g>
+                <circle r="2.5" cy="4" cx="12" />
+                <circle r="2.5" cy="12" cx="12" />
+                <circle r="2.5" cy="20" cx="12" />
+              </g>
+            </svg>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -166,7 +166,7 @@
     </div>
 
   </template>
-  
+
   <template id="playback-button-template">
     <button id="play-pause" class="app-button">
       <svg id="play-pause-icon" class="button-icon" width="24" height="24" viewBox="-5 -4 40 40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
