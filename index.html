@@ -20,18 +20,30 @@
     <header id="app-header">
       <div class="app-header-row" id="app-header-top">
         <h3 id="app-title">Pendulum Synth</h3>
+        <div id="menu">
+          <button id="menu-button" class="app-button">
+            <svg id="ellipsis-icon" width="24" height="18" viewBox="3 1.5 16 22" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g>
+                <circle r="2.5" cy="4" cx="12" />
+                <circle r="2.5" cy="12" cx="12" />
+                <circle r="2.5" cy="20" cx="12" />
+              </g>
+            </svg>
+          </button>
+
+        </div>
       </div>
       <div class="app-header-row" id="param-row">
-        <div class="control-group">
-          <label for="duration-input">Dur</label>
+        <div class="control-group" data-active="true">
+          <label for="duration-input">Duration</label>
           <input type="text" name="duration-input" class="app-input" id="duration-input" data-param="duration" value="1000">
         </div>
-        <div class="control-group">
+        <div class="control-group" data-active="true">
           <label id="delay-time-label" data-active="true" for="delay-time-input">Delay Time</label>
           <input type="text" name="delay-time-input" class="app-input" id="delay-time-input" data-param="delayTime" value="0.3">
         </div>
-        <div class="control-group">
-          <label for="oscillator-input">Oscillator</label>
+        <div class="control-group" data-active="true">
+          <label for="oscillator-input">Wave</label>
           <select type="text" class="control-input" name="oscillator-input" id="oscillator-input" data-param="oscillator">
             <option value="triangle">Triangle</option>
             <option value="sine">Sine</option>
@@ -39,7 +51,7 @@
             <option value="sawtooth">Sawtooth</option>
           </select>
         </div>
-        <div class="control-group">
+        <div class="control-group" data-active="false">
           <label for="warbler-input">Warbler</label>
           <input type="checkbox" name="warbler-input" class="app-input" id="warbler-input" data-param="warbler">
         </div>
@@ -62,13 +74,13 @@
       <svg id="canvas" width="412" height="781" viewBox="-50 -75 100 200" _preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs>
           <pattern id="smallGrid" style="z-index: 0" width="2.5" height="2.5" patternUnits="userSpaceOnUse">
-            <path id="smallGridPath" style="z-index: 0"  d="M 2.5 0 H 0 V 2.5" fill="none" stroke="#C9C9C950" stroke-width="0.1" />
+            <path id="smallGridPath" style="z-index: 0" d="M 2.5 0 H 0 V 2.5" fill="none" stroke="#C9C9C950" stroke-width="0.1" />
           </pattern>
-          <pattern id="largeGrid" style="z-index: 0"  width="10" height="10" patternUnits="userSpaceOnUse">
-            <rect id="largeGridRect" style="z-index: 0"  width="10" height="10" fill="url(#smallGrid)" />
-            <path id="largeGridPath" style="z-index: 0"  d="M 10 0 H 0 V 10" fill="none" stroke="#C9C9C950" stroke-width="0.1" />
+          <pattern id="largeGrid" style="z-index: 0" width="10" height="10" patternUnits="userSpaceOnUse">
+            <rect id="largeGridRect" style="z-index: 0" width="10" height="10" fill="url(#smallGrid)" />
+            <path id="largeGridPath" style="z-index: 0" d="M 10 0 H 0 V 10" fill="none" stroke="#C9C9C950" stroke-width="0.1" />
           </pattern>
-          <marker id="trianglestart" style="z-index: 0"  viewBox="0 0 1 1" refX="0" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <marker id="trianglestart" style="z-index: 0" viewBox="0 0 1 1" refX="0" refY="5" markerWidth="8" markerHeight="8" orient="auto">
             <path d="M 10 0 L 0 5 L 10 10 z" />
           </marker>
           <marker id="triangleend" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
@@ -155,6 +167,7 @@
     </div>
 
   </template>
+  
   <template id="playback-button-template">
     <button id="play-pause" class="app-button">
       <svg id="play-pause-icon" class="button-icon" width="24" height="24" viewBox="-5 -4 40 40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -169,6 +182,33 @@
     </button>
 
   </template>
+
+  <template id="param-controls-template">
+    <section id="param-controls">
+      <div class="control-group">
+        <label for="duration-input">Dur</label>
+        <input type="text" name="duration-input" class="app-input" id="duration-input" data-param="duration" value="1000">
+      </div>
+      <div class="control-group">
+        <label id="delay-time-label" data-active="true" for="delay-time-input">Delay Time</label>
+        <input type="text" name="delay-time-input" class="app-input" id="delay-time-input" data-param="delayTime" value="0.3">
+      </div>
+      <div class="control-group">
+        <label for="oscillator-input">Wave</label>
+        <select type="text" class="control-input" name="oscillator-input" id="oscillator-input" data-param="oscillator">
+          <option value="triangle">Triangle</option>
+          <option value="sine">Sine</option>
+          <option value="square">Square</option>
+          <option value="sawtooth">Sawtooth</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="warbler-input">Warbler</label>
+        <input type="checkbox" name="warbler-input" class="app-input" id="warbler-input" data-param="warbler">
+      </div>
+    </section>
+  </template>
+
   <template id="param-selector-template">
     <div id="param-selector" class="control-group">
       <!-- <label for="param-input">Oscillator</label> -->

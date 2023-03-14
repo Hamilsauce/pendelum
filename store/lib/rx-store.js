@@ -1,8 +1,6 @@
 const { BehaviorSubject, Subject } = rxjs
 const { shareReplay, distinctUntilChanged, tap, map, scan } = rxjs.operators;
 
-/*  */
-
 
 const AUTH_KEY = '123';
 
@@ -11,6 +9,7 @@ const StoreOptionsDef = {
   reducer: Function,
   isDef: true,
 }
+
 
 class BhsStore extends BehaviorSubject {
   #updateSubject$ = new Subject();
@@ -27,11 +26,11 @@ class BhsStore extends BehaviorSubject {
     this.#name = name;
 
     this.#reducer = storeOptions.reducer;
+    
     this.#reducePipe$ = this.#updateSubject$
       .pipe(
         map(action => this.#reducer(this.snapshot(), action)),
         tap(newState => this.next(newState, AUTH_KEY)),
-        // tap(x => console.warn('reducePipe$', x)),
       );
 
     this.#stateSubscription = this.#reducePipe$.subscribe();
@@ -53,7 +52,7 @@ class BhsStore extends BehaviorSubject {
     return this.asObservable()
       .pipe(
         map(selectorFn),
-        distinctUntilChanged( /* Put something good here */ ),
+        distinctUntilChanged( /* TODO Put something good here */ ),
         shareReplay(1),
       );
   }

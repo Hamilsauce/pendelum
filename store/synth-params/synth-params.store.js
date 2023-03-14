@@ -30,13 +30,13 @@ const synthParamsReducer = (state, action) => {
   switch (action.type) {
     case 'volume': {
       const { level } = action;
+      
       if (!level) return { ...state };
 
       return {
         ...state,
-        volume: { ...state.volume, level  },
-        delay: { ...state.delay, level  },
-        oscillator: { ...state.oscillator, level  },
+        delay: { ...state.delay, level },
+        oscillator: { ...state.oscillator, level },
       };
     }
 

@@ -134,8 +134,9 @@ a {
   font-weight: 300;
   font-size: 12px;
   text-align: center;
-  padding: 2px 8px 16px 8px;
+  padding: 2px 8px 8px 8px;
   white-space: nowrap;
+  /* border: 1px solid #FFFFFF; */
 }
 
 .app-header-row.bottom {
@@ -388,7 +389,14 @@ svg * {
   pointer-events: none;
 }
 
-.control-group label[data-active=true] {
-  background: var(--accent-white99);
+.control-group[data-active=true] label {
+  background: var(--accent-white);
   color: var(--primary);
+}
+
+#menu-button {
+  /* border: 1px solid #FFFFFF; */
+}
+#menu-button circle{
+  fill: var(--accent-white99);
 }

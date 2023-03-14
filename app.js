@@ -3,18 +3,14 @@ import { noteDataSets } from './data/notes.data.js';
 import { PlaybackButton } from './components/PlaybackButton.js';
 import { VolumeButton } from './components/VolumeButton.js';
 import { roundTwo, coerce } from './lib/utils.js';
-import {
-  anim,
-  dot,
-  // anim2,
-  // dot2
-} from './components/rx-pendulum.js';
+import { anim, dot } from './components/rx-pendulum.js';
+
 import { getSynthParamsStore } from './store/synth-params/synth-params.store.js';
 import { updateDuration, updateOscillator, updateDelay, updateWarbler } from './store/synth-params/synth-params.actions.js';
 import { getArpRhythm } from './lib/create-rhythm.js';
 
 
-const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
+const { interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
 
@@ -60,9 +56,9 @@ export class App {
       const t = e.target
       const p = t.closest('.control-group');
 
-      const currState = t.dataset.active === 'true' ? true : false;
-      t.dataset.active = !currState
-      p.querySelector('input').disabled=  t.dataset.active == 'false' ? true: false;
+      const currState = p.dataset.active === 'true' ? true : false;
+      p.dataset.active = !currState
+      p.querySelector('input').disabled = p.dataset.active == 'false' ? true : false;
       this.audio.toggleNode({ name: 'delay', state: !currState })
 
 
@@ -88,12 +84,12 @@ export class App {
     this.frequency$ = dot.init('dot', 'curve');
 
 
-    const arp$ = getArpRhythm().pipe(
-      // map(x => x),
-      // tap(x => console.log('getArpRhythm', x)),
-      // tap(frequency => this.#oscillator.frequency.value = frequency),
-      // map(this.audio.setFrequency),
-    )
+    // const arp$ = getArpRhythm().pipe(
+    //   // map(x => x),
+    //   // tap(x => console.log('getArpRhythm', x)),
+    //   // tap(frequency => this.#oscillator.frequency.value = frequency),
+    //   // map(this.audio.setFrequency),
+    // )
     // .subscribe();
 
     // console.log('arp$', arp$)

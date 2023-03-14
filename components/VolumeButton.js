@@ -21,19 +21,20 @@ export class VolumeButton extends EventEmitter {
     this.#self = template('volume-input');
 
     this.rangeInput.style.width = '0px';
+    
     this.rangeInput.style.display = 'none';
-
 
     this.volume$ = fromEvent(this.rangeInput, 'pointermove').pipe(
       map(({ target }) => updateVolume({ level: +target.value / 100 })),
       tap(_ => paramsStore.dispatch(_))
-    ).subscribe()
+    ).subscribe();
 
     this.#self.addEventListener('click', e => {
-      this.toggleRangeInput()
+      this.toggleRangeInput();
+     
       setTimeout(() => {
-        this.rangeInput.focus()
-      }, 0)
+        this.rangeInput.focus();
+      }, 0);
     });
 
     this.rangeInput.addEventListener('click', e => {
@@ -42,10 +43,8 @@ export class VolumeButton extends EventEmitter {
     });
 
     this.rangeInput.addEventListener('change', e => {
-      this.toggleRangeInput()
+      this.toggleRangeInput();
     });
-
-    this.#name = name;
   }
 
   get self() { return this.#self };

@@ -52,8 +52,6 @@ export class AudioController {
     this.#gains.oscillator.connect(this.#ctx.destination);
     this.#gains.delay.connect(this.#ctx.destination);
 
-    // this.#gainstash.push(this.#gain);
-
     const curves = {
       up: [0.0, 0.1, 0.225, 0.325, 0.4, 0.5],
       down: [0.0, 0.1, 0.225, 0.325, 0.4, 0.5].reverse(),
