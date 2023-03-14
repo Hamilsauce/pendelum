@@ -14,7 +14,8 @@ export const updateVolume = createAction(
 
 export const updateOscillator = createAction(
   'oscillator', {
-    oscillator: Object,
+    waveType: [String, null],
+    level: Number
   }
 )
 

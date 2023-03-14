@@ -52,14 +52,13 @@ const synthParamsReducer = (state, action) => {
     }
 
     case 'oscillator': {
-      const { oscillator } = action;
-      const { type, level } = oscillator;
+      const { waveType, level } = action;
 
-      if (!(type || level)) return { ...state };
+      if (!(waveType || level)) return { ...state };
 
       return {
         ...state,
-        oscillator: { ...state.oscillator, type, level }
+        oscillator: { ...state.oscillator, type: waveType, level }
       }
     }
 

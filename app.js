@@ -50,7 +50,31 @@ export class App {
     this.startButton.addEventListener('click', this.onStart);
 
     const controlGroups = [...document.querySelectorAll('.control-group')]
+
+    const durationLabel = document.querySelector('#duration-label')
     const delayTimeLabel = document.querySelector('#delay-time-label')
+    const waveTypeLabel = document.querySelector('#wave-type-label')
+
+    waveTypeLabel.addEventListener('click', e => {
+      const t = e.target
+      const p = t.closest('.control-group');
+      const currState = p.dataset.active === 'true' ? true : false;
+
+      p.dataset.active = !currState
+      p.querySelector('select').disabled = p.dataset.active == 'false' ? true : false;
+      paramsStore.dispatch(updateOscillator({ level: !currState ? 0.5 : 0.001 }))
+    });
+
+    durationLabel.addEventListener('click', e => {
+      const t = e.target
+      const p = t.closest('.control-group');
+      const currState = p.dataset.active === 'true' ? true : false;
+
+      p.dataset.active = !currState
+      p.querySelector('input').disabled = p.dataset.active == 'false' ? true : false;
+
+      anim.toggleHold();
+    });
 
     delayTimeLabel.addEventListener('click', e => {
       const t = e.target
@@ -60,8 +84,6 @@ export class App {
       p.dataset.active = !currState
       p.querySelector('input').disabled = p.dataset.active == 'false' ? true : false;
       this.audio.toggleNode({ name: 'delay', state: !currState })
-
-
     });
   }
 
@@ -142,7 +164,7 @@ export class App {
       const param = input.dataset.param;
       const value = coerce(input.selectedOptions[0].value);
 
-      paramsStore.dispatch(updateOscillator({ oscillator: { type: value } }));
+      paramsStore.dispatch(updateOscillator({ waveType: value }));
     }
 
     else if (input && input.dataset.param === 'delayTime') {
@@ -160,7 +182,7 @@ export class App {
   #togglePlayback(state) {
     if (state === false || this.audio.playing) {
       this.audio.suspend();
-      anim.stop();
+      anim.hold();
     }
     else if (state === true || !this.audio.playing) {
       this.audio.resume();
