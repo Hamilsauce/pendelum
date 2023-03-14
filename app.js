@@ -58,9 +58,11 @@ export class App {
 
     delayTimeLabel.addEventListener('click', e => {
       const t = e.target
+      const p = t.closest('.control-group');
+
       const currState = t.dataset.active === 'true' ? true : false;
       t.dataset.active = !currState
-
+      p.querySelector('input').disabled=  t.dataset.active == 'false' ? true: false;
       this.audio.toggleNode({ name: 'delay', state: !currState })
 
 
