@@ -1,9 +1,20 @@
 // import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
 // const { template, utils, rxjs } = ham;
+import { getPendulumStore } from '../store/pendulum/pendulum.store.js';
+import { updateVertex, updateControl, updateFrequencyDot } from '../store/pendulum/pendulum.actions.js';
 
 const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 
 const { sampleTime, flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
+
+const pendulumStore = getPendulumStore()
+
+const frequencyState$ = pendulumStore.select(state => state.frequencyDot)
+  .pipe(
+    map(x => x),
+    // tap(x => console.warn('pendulumStore', x))
+  )
+  .subscribe()
 
 class FrequencyDot {
   #sprite = null;
@@ -26,6 +37,7 @@ class FrequencyDot {
     this.#positionSubject$ = new BehaviorSubject(0)
       .pipe(
         map(this.getPointOnTrack.bind(this)),
+        tap(({x, y})=> pendulumStore.dispatch(updateFrequencyDot({x,y}))),
         map(this.translateToPoint.bind(this)),
         map(this.getFrequency.bind(this)),
       );

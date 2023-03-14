@@ -142,16 +142,18 @@ a {
 .app-header-row.bottom {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 0px;
   padding: 0;
+  padding: 8px 0 0 0;
+  
 }
 
 #param-row {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
@@ -356,8 +358,8 @@ svg * {
 #playback-controls {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
+  /* justify-content: flex-start; */
+  /* align-items: center; */
   gap: 8px;
   width: 100%;
   z-index: 120;
@@ -394,9 +396,18 @@ svg * {
   color: var(--primary);
 }
 
-#menu-button {
-  /* border: 1px solid #FFFFFF; */
+#menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 0px;
+  /* width: 100%; */
+  height: 100%;
+  /* border: 1pxsolid #FFFFFF; */
+  padding: 0;
 }
-#menu-button circle{
+
+#menu-button circle {
   fill: var(--accent-white99);
 }

@@ -1,12 +1,18 @@
 import { noteDataSets } from '../data/notes.data.js';
 const { getArpeggio, frequencyMap, getTriad } = noteDataSets
 import { getSynthParamsStore } from '../store/synth-params/synth-params.store.js';
-const paramsStore = getSynthParamsStore()
+import { getPendulumStore } from '../store/pendulum/pendulum.store.js';
+
 import { getArpRhythm } from '../lib/create-rhythm.js';
 const { forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 
 const getCurve = (...values) => new Float32Array(values)
+
+
+const paramsStore = getSynthParamsStore()
+const pendulumStore = getPendulumStore()
+
 
 export class AudioController {
   #type = 'triangle';
@@ -64,17 +70,26 @@ export class AudioController {
 
     this.setFrequency = this.#setFrequency.bind(this);
 
+
     this.params$ = paramsStore.select();
 
-    this.params$
-      .pipe(
-        tap(({ volume, oscillator, delay, warbler }) => {
-          this.setOscillator(oscillator);
-          this.setDelay(delay);
-          this.setWarbler(warbler);
-        }),
-      )
-      .subscribe();
+    this.params$.pipe(
+      tap(({ volume, oscillator, delay, warbler }) => {
+        this.setOscillator(oscillator);
+        this.setDelay(delay);
+        this.setWarbler(warbler);
+      }),
+    ).subscribe();
+
+
+    this.frequencyState$ = pendulumStore.select(state => state.frequencyDot);
+
+    this.frequencyState$.pipe(
+      tap(({ x, y }) => {
+        const frequency = (100 + y) * 2;
+        this.#setFrequency({ frequency })
+      }),
+    ).subscribe();
 
 
   }
@@ -171,20 +186,16 @@ export class AudioController {
       this.playing = false;
     }
   }
-  
+
   toggleNode({ name, state }) {
     if (name === 'delay') {
       const value = state ? 0.3 : 0.00001
-       this.#gains.delay.gain.exponentialRampToValueAtTime(value, this.#ctx.currentTime + 0.1)
+      this.#gains.delay.gain.exponentialRampToValueAtTime(value, this.#ctx.currentTime + 0.1)
     }
   }
 
   #setFrequency({ frequency }) {
     this.#oscillator.frequency.value = frequency;
-
-    // setInterval(() => {
-
-    //   console.log(' ',);}, 2500)
 
     return frequency;
   }
@@ -204,7 +215,7 @@ export class AudioController {
       this.toggleWarbler(active)
     }
   }
-  
+
   setOscillator({ type, level }) {
     if (type) {
       this.#oscillator.type = type;
@@ -214,7 +225,7 @@ export class AudioController {
       this.#gains.oscillator.gain.exponentialRampToValueAtTime(level, this.#ctx.currentTime + 0.1)
     }
   }
-  
+
 
   setDelay({ time, level }) {
     if (!isNaN(+time)) {

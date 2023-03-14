@@ -7,6 +7,10 @@ import { anim, dot } from './components/rx-pendulum.js';
 
 import { getSynthParamsStore } from './store/synth-params/synth-params.store.js';
 import { updateDuration, updateOscillator, updateDelay, updateWarbler } from './store/synth-params/synth-params.actions.js';
+
+import { getPendulumStore } from './store/pendulum/pendulum.store.js';
+// import { updateVertex, updateControl, updateFrequencyDot } from './store/pendulum/pendulum.actions.js';
+
 import { getArpRhythm } from './lib/create-rhythm.js';
 
 
@@ -16,6 +20,8 @@ const { fromFetch } = rxjs.fetch;
 
 
 const paramsStore = getSynthParamsStore()
+const pendulumStore = getPendulumStore()
+
 
 const pbButton = new PlaybackButton();
 const volumeButton = new VolumeButton();
@@ -122,7 +128,7 @@ export class App {
       //   map(x => x),
       //   tap(x => console.log('TAP', x)),
       // ), ),
-      map(this.audio.setFrequency),
+      // map(this.audio.setFrequency),
       tap(freq => {
         const truncFreq = Math.trunc(freq)
         const note = noteDataSets.frequencyMap.get(truncFreq)
