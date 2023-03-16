@@ -63,6 +63,7 @@ export class App {
     const warblerLabel = document.querySelector('#warbler-label')
 
     waveTypeLabel.addEventListener('click', e => {
+      e.preventDefault()
       const t = e.target
       const p = t.closest('.control-group');
       const currState = p.dataset.active === 'true' ? true : false;
@@ -73,6 +74,7 @@ export class App {
     });
 
     durationLabel.addEventListener('click', e => {
+      e.preventDefault()
       const t = e.target
       const p = t.closest('.control-group');
       const currState = p.dataset.active === 'true' ? true : false;
@@ -84,6 +86,7 @@ export class App {
     });
 
     delayTimeLabel.addEventListener('click', e => {
+      e.preventDefault()
       const t = e.target
       const p = t.closest('.control-group');
 
@@ -94,6 +97,7 @@ export class App {
     });
 
     warblerLabel.addEventListener('click', e => {
+      e.preventDefault()
       const t = e.target
       const p = t.closest('.control-group');
 
@@ -120,7 +124,9 @@ export class App {
     this.audio.play();
     this.startPrompt.remove();
 
-    this.frequency$ = dot.init('dot', 'curve');
+    dot.init('dot', 'curve');
+   
+    this.frequency$ = pendulumStore.select(state => state.frequency)
 
 
     // const arp$ = getArpRhythm().pipe(
@@ -133,26 +139,15 @@ export class App {
 
     // console.log('arp$', arp$)
 
-    dot.frequency$.pipe(
+    this.frequency$.pipe(
       // tap(x => console.log('x', x)),
       // mergeMap(({ frequency }) => arp$.pipe(
       //   map(x => x),
       //   tap(x => console.log('TAP', x)),
       // ), ),
       // map(this.audio.setFrequency),
-      tap(freq => {
-        const truncFreq = Math.trunc(freq)
-        const note = noteDataSets.frequencyMap.get(truncFreq)
 
-        if (note) {
-          this.frequencyDisplay.textContent = truncFreq
-          this.noteDisplay.textContent = note.pitch;
-        } else {
-          this.noteDisplay.textContent = this.noteDisplay.textContent
-          this.frequencyDisplay.textContent = this.frequencyDisplay.textContent
-        }
-      }),
-
+      tap(this.updatePitchDisplay.bind(this)),
     ).subscribe();
 
     anim.start(+this.params.duration.value);
@@ -218,5 +213,13 @@ export class App {
       this.audio.resume();
       anim.start();
     }
+  }
+
+  updatePitchDisplay(freq) {
+    const truncFreq = Math.trunc(freq);
+    const note = noteDataSets.frequencyMap.get(truncFreq);
+
+    this.frequencyDisplay.textContent = note ? `${truncFreq} Hz` : `${this.frequencyDisplay.textContent}`;
+    this.noteDisplay.textContent = note ? note.pitch : this.noteDisplay.textContent;
   }
 }

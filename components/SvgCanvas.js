@@ -3,12 +3,16 @@ import { Point } from './Point.js';
 import { SvgPath } from './SvgPath.js';
 // import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
 // const { date, array, utils, text } = ham;
+import { getPendulumStore } from '../store/pendulum/pendulum.store.js';
+import { updateVertex, updateControl, updateFrequencyDot } from '../store/pendulum/pendulum.actions.js';
 
 const { combineLatest, forkJoin, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { takeUntil, sampleTime, flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
+
+
 
 
 const createText = (value, parent) => {
@@ -35,6 +39,7 @@ export const InitialPoints = {
   'control-point-2': Point.create(25, 50),
 }
 
+const pendulumStore = getPendulumStore()
 
 export class SvgCanvas {
   #dir;
@@ -65,17 +70,17 @@ export class SvgCanvas {
     this.pointerUp$ = fromEvent(this.self, 'pointerup')
 
     this.pointerEvents$ = this.pointerDown$.pipe(
-        switchMap(() => this.pointerMove$.pipe(
-          map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
-          filter(_ => !!_.target.dataset.pointGroup),
-          groupBy(_ => _.target.dataset.pointGroup),
-          switchMap(groups$ => this.pointerUp$
-            .pipe(
-              map(() => groups$)
-            )
+      switchMap(() => this.pointerMove$.pipe(
+        map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
+        filter(_ => !!_.target.dataset.pointGroup),
+        groupBy(_ => _.target.dataset.pointGroup),
+        switchMap(groups$ => this.pointerUp$
+          .pipe(
+            map(() => groups$)
           )
-        ))
-      )
+        )
+      ))
+    )
 
     this.pathPoints$ = this.pointerEvents$.pipe(
       mergeMap(group$ => group$
@@ -85,16 +90,23 @@ export class SvgCanvas {
           tap(({ target, x, y }) => {
             const value = this.domPoint.bind(this)(target, x, y);
 
-            const pointType = target.classList.contains('path-point') ? 'vertex' : 'control';
+            const setName = target.closest('.control-set').dataset.controlSetName
+
+            const pointType = target.dataset.pointType
+            // const pointType = target.classList.contains('path-point') ? 'vertex' : 'control';
+
             const line = target.closest('.control-set').querySelector('.control-line');
 
             target.cx.baseVal.value = value.x;
             target.cy.baseVal.value = value.y;
-
+            // console.warn(value, setName, pointType);
             if (pointType === 'vertex') {
+              pendulumStore.dispatch(updateVertex({ x: value.x, y: value.y, vertex: setName }))
               line.x2.baseVal.value = value.x
               line.y2.baseVal.value = value.y
             } else {
+              pendulumStore.dispatch(updateControl({ x: value.x, y: value.y, control: setName }))
+              // pendulumStore.dispatch(updateControl(value))
               line.x1.baseVal.value = value.x
               line.y1.baseVal.value = value.y
             }

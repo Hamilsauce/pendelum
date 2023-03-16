@@ -1,5 +1,5 @@
 import { defineStore } from '../lib/rx-store.js';
-
+import { pointToFrequency } from '../../lib/utils.js';
 
 const initialPendulumState = {
   viewport: {
@@ -12,6 +12,7 @@ const initialPendulumState = {
     x: 0,
     y: 20,
   },
+  frequency: 220,
   path: {
     length: 0,
     vertices: {
@@ -47,6 +48,23 @@ const pendulumReducer = (state, action) => {
       };
     }
 
+    case '[ Update Control ]': {
+      const { control, x, y } = action;
+
+      if (!(control && x && y)) return { ...state };
+
+      return {
+        ...state,
+        path: {
+          ...state.path,
+          controls: {
+            ...state.path.controls,
+            [control]: { ...state.path.controls[control], x, y },
+          }
+        },
+      };
+    }
+
     case '[ Update Frequency Dot ]': {
       const { x, y } = action;
 
@@ -54,6 +72,7 @@ const pendulumReducer = (state, action) => {
 
       return {
         ...state,
+        frequency: pointToFrequency({ y }),
         frequencyDot: { ...state.frequencyDot, x, y },
       };
     }
@@ -64,7 +83,7 @@ const pendulumReducer = (state, action) => {
 };
 
 
-export const getPendulumStore = defineStore('pendulum', {
+export const getPendulumStore = defineStore('pendulumStore', {
   state: initialPendulumState,
   reducer: pendulumReducer
-})
+});

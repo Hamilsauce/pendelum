@@ -7,6 +7,7 @@ var(--accent-white40);
   --accent-white: #F3F3F3;
   --accent-white40: #FEF3F340;
   --accent-white99: #FEF3F399;
+  --accent-orange: #E38D16;
 }
 
 * {
@@ -43,7 +44,7 @@ body {
 }
 
 input[type=checkbox] {
-  background: #E38D16;
+  background: var(--accent-orange);
   filter: hue-rotate(191deg) brightness(1.08);
 }
 
@@ -181,14 +182,15 @@ a {
   border: 1px solid var(--accent-white40);
   border-radius: 4px;
   overflow: hidden;
+  transition: 0.2s;
 }
 
 .control-group>* {
   font-size: 13px;
 }
 
-.control-group>*:nth-child(2) {
-  color: #E38D16;
+.control-group .control-input {
+  color: var(--accent-orange);
 }
 
 .control-group>label {
@@ -237,11 +239,12 @@ a {
 }
 
 #oscillator-input {
-  padding: 4px 6px;
+  padding: 4px 5px;
   background: none;
   text-align: center;
   border: none;
   border-left: 1px solid #F0F0F03D;
+  outline: none;
 }
 
 .app-input {
@@ -254,6 +257,9 @@ a {
   text-align: center;
 }
 
+.control-input:hover {
+  filter: contrast(1.8);
+}
 
 #app-body {
   position: relative;
@@ -396,15 +402,17 @@ svg * {
   color: var(--primary);
 }
 
+.control-group[data-active=false] * {
+  filter: opacity(0.75);
+}
+
 #menu {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: flex-end;
   gap: 0px;
-  /* width: 100%; */
   height: 100%;
-  /* border: 1pxsolid #FFFFFF; */
   padding: 0;
 }
 

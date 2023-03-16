@@ -1,4 +1,5 @@
 import { Point } from './Point.js';
+import { getPendulumStore } from '../store/pendulum/pendulum.store.js';
 
 const { forkJoin, asObservable, Observable, iif, BehaviorSubject, AsyncSubject, Subject, interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
@@ -8,6 +9,10 @@ const Position = {
   abs: 'absolute',
   rel: 'relative',
 }
+
+
+const pendulumStore = getPendulumStore()
+
 
 export class SvgPath {
   #data$;

@@ -9,12 +9,10 @@ const { sampleTime, flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan
 
 const pendulumStore = getPendulumStore()
 
-const frequencyState$ = pendulumStore.select(state => state.frequencyDot)
-  .pipe(
+const frequencyState$ = pendulumStore.select(state => state.frequencyDot).pipe(
     map(x => x),
     // tap(x => console.warn('pendulumStore', x))
-  )
-  .subscribe()
+  ).subscribe()
 
 class FrequencyDot {
   #sprite = null;
@@ -97,7 +95,6 @@ class FrequencyDot {
     this.isHolding = false;
   }
 }
-
 
 export const dot = new FrequencyDot();
 

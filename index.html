@@ -24,23 +24,29 @@
       <div class="app-header-row" id="param-row">
         <div class="control-group" data-active="true">
           <label id="duration-label" for="duration-input">Duration</label>
-          <input type="text" name="duration-input" class="app-input" id="duration-input" data-param="duration" value="1000">
+          <div class="control-input-container">
+          </div>
+          <input type="number" name="duration-input" class="control-input app-input" id="duration-input" data-param="duration" value="1000">
         </div>
         <div class="control-group" data-active="true">
           <label id="delay-time-label" data-active="true" for="delay-time-input">Delay Time</label>
-          <input type="text" name="delay-time-input" class="app-input" id="delay-time-input" data-param="delayTime" value="0.3">
+          <div class="control-input-container">
+            <input type="number" name="delay-time-input" class="app-input control-input" id="delay-time-input" data-param="delayTime" value="0.3">
+          </div>
         </div>
         <div class="control-group" data-active="true">
           <label id="wave-type-label" for="oscillator-input">Wave</label>
-          <select type="text" class="control-input" name="oscillator-input" id="oscillator-input" data-param="oscillator">
-            <option value="triangle">Triangle</option>
-            <option value="sine">Sine</option>
-            <option value="square">Square</option>
-            <option value="sawtooth">Sawtooth</option>
-          </select>
+          <div class="control-input-container">
+            <select type="text" class="control-input" name="oscillator-input" id="oscillator-input" data-param="waveType">
+              <option value="triangle">Triangle</option>
+              <option value="sine">Sine</option>
+              <option value="square">Square</option>
+              <option value="sawtooth">Sawtooth</option>
+            </select>
+          </div>
         </div>
         <div class="control-group" data-active="false">
-          <label id="warbler-label" for="warbler-input">Warbler</label>
+          <label id="warbler-label" for="warbler-input" class="control-input">Warbler</label>
         </div>
       </div>
       <div class="app-header-row bottom" id="">
@@ -114,22 +120,22 @@
                   S 25 50, 50 0
                 " />
 
-                <g id="control-set-0" class="control-set">
+                <g data-control-set-name="start" id="control-set-0" class="control-set">
                   <line id="control-line-0" class="control-line" x1="-35" x2="-50" y1="-50" y2="0" stroke="#C2C2C280" stroke-width="0.5" />
-                  <circle data-point-group="vertices" id="path-point-0" class="path-point" cx="-50" cy="0" r="4" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
-                  <circle data-point-group="controls" id="control-point-0" class="control-point" cx="-35" cy="-50" r="4.5" fill="blue" stroke="#FFFFFF" stroke-width="0.5" />
+                  <circle data-point-type="vertex" data-point-group="vertices" id="path-point-0" class="path-point" cx="-50" cy="0" r="4" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
+                  <circle data-point-type="control" data-point-group="controls" id="control-point-0" class="control-point" cx="-35" cy="-50" r="4.5" fill="blue" stroke="#FFFFFF" stroke-width="0.5" />
                 </g>
 
-                <g id="control-set-1" class="control-set">
+                <g data-control-set-name="middle" id="control-set-1" class="control-set">
                   <line id="control-line-1" class="control-line" x1="-15" x2="0" y1="-50" y2="0" stroke="#C2C2C280" stroke-width="0.5" />
-                  <circle data-point-group="vertices" id="path-point-1" class="path-point" cx="0" cy="0" r="4" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
-                  <circle data-point-group="controls" id="control-point-1" class="control-point" cx="-15" cy="-50" r="4.5" fill="orange" stroke="#FFFFFF" stroke-width="0.5" />
+                  <circle data-point-type="vertex" data-point-group="vertices" id="path-point-1" class="path-point" cx="0" cy="0" r="4" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
+                  <circle data-point-type="control" data-point-group="controls" id="control-point-1" class="control-point" cx="-15" cy="-50" r="4.5" fill="orange" stroke="#FFFFFF" stroke-width="0.5" />
                 </g>
 
-                <g id="control-set-2" class="control-set">
+                <g data-control-set-name="end" id="control-set-2" class="control-set">
                   <line id="control-line-2" class="control-line" x1="25" x2="50" y1="50" y2="0" stroke="#C2C2C280" stroke-width="0.5" />
-                  <circle data-point-group="vertices" id="path-point-2" class="path-point" cx="50" cy="0" r="4" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
-                  <circle data-point-group="controls" id="control-point-2" class="control-point" cx="25" cy="50" r="4.5" fill="green" stroke="#FFFFFF" stroke-width="0.5" />
+                  <circle data-point-type="vertex" data-point-group="vertices" id="path-point-2" class="path-point" cx="50" cy="0" r="4" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
+                  <circle data-point-type="control" data-point-group="controls" id="control-point-2" class="control-point" cx="25" cy="50" r="4.5" fill="green" stroke="#FFFFFF" stroke-width="0.5" />
                 </g>
 
               </g>
@@ -179,6 +185,15 @@
       </svg>
     </button>
 
+  </template>
+
+  <template id="control-group-template">
+     <div class="control-group" data-active="false">
+       <label class="control-label" data-active="false" for="-input">NULL</label>
+       <div class="control-input-container">
+         <input type="number" name="delay-time-input" class="app-input control-input" id="delay-time-input" data-param="delayTime" value="0.3">
+       </div>
+     </div>
   </template>
 
   <template id="param-controls-template">
