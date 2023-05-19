@@ -1,6 +1,8 @@
 import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
 import { EventEmitter } from 'https://hamilsauce.github.io/hamhelper/event-emitter.js';
 import { SynthParamConfig } from '../lib/audio-param-config.js';
+import { ParamControl } from './ParamControl.js';
+
 const { template, DOM, utils } = ham;
 
 export const ViewOptions = {
@@ -13,18 +15,14 @@ export const ViewOptions = {
 
 export class ParamControls {
   #self;
-  #name;
 
   constructor() {
-
     this.#self = template('param-controls');
 
-    this.#self.firstElementChild.addEventListener('click', e => {
-      this.toggleIcons()
-    });
+    this.onParamChange = this.#onParamChange.bind(this);
 
-    this.#name = name;
-    
+
+
     SynthParamConfig
   }
 
@@ -32,15 +30,9 @@ export class ParamControls {
 
   get dataset() { return this.self.dataset };
 
-  get textContent() { return this.self.textContent };
-
-  set textContent(v) { this.dom.textContent = v }
-
   get id() { return this.#self.id };
 
   get dom() { return this.#self };
-
-  get name() { return this.#name };
 
   get playIcon() { return this.selectDOM('#play-icon') };
 
@@ -51,91 +43,44 @@ export class ParamControls {
     throw 'Must define init in child class of view. Cannot call create on View Class. '
   }
 
-createParamGroup(paramConfig) {
-const el = DOM.createElement(paramConfig)
-}
-
-  // toggleIcons() {
-  //   if (this.playIcon.style.display === 'none') {
-  //     this.playIcon.style.display = null;
-  //     this.pauseIcon.style.display = 'none';
-  //   } else {
-  //     this.pauseIcon.style.display = null;
-  //     this.playIcon.style.display = 'none';
-  //   }
-  // }
-
-
-  selectDOM(selector) {
-    const result = [...this.#self.querySelectorAll(selector)];
-
-    return result.length === 1 ? result[0] : result;
+  createParamGroup(config) {
+    const el = new ParamControl(config);
+    
+    this.#self.append(el);
   }
-};
 
 
-import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
-import { EventEmitter } from 'https://hamilsauce.github.io/hamhelper/event-emitter.js';
-const { template, DOM, utils } = ham;
+  #onParamChange(e) {
+    const input = e.target.closest('[data-param]');
 
-export const ElementProperties = {
-  id: String,
-  classList: Array,
-  dataset: Object,
-}
+    if (input && input.dataset.param === 'duration') {
+      const param = input.dataset.param;
+      const value = coerce(input.value);
 
+      paramsStore.dispatch(updateDuration({ time: value }));
 
-export class View extends EventEmitter {
-  #self;
-  #name;
-
-  constructor(name, options = ViewOptions) {
-    super();
-
-    if (!name) throw new Error('No name passed to constructor for ', this.constructor.name);
-
-    if (options && options !== ViewOptions) {
-      this.#self = DOM.createElement(options)
+      anim.duration = value;
     }
 
-    else this.#self = View.#getTemplate(name);
+    else if (input && input.dataset.param === 'oscillator') {
+      const param = input.dataset.param;
+      const value = coerce(input.selectedOptions[0].value);
 
-    if (!this.#self) throw new Error('Failed to find/load a view class template. Class/template name: ' + name);
+      paramsStore.dispatch(updateOscillator({ waveType: value }));
+    }
 
-    this.#name = name;
+    else if (input && input.dataset.param === 'delayTime') {
+      const param = input.dataset.param;
+      const value = coerce(input.value);
 
-    this.dataset.id = View.uuid(name);
+      paramsStore.dispatch(updateDelay({ time: value }));
+    }
+
+    else if (input && input.dataset.param === 'warbler') {
+      paramsStore.dispatch(updateWarbler({ active: e.target.closest('.control-group') }));
+    }
   }
 
-  get self() { return this.#self };
-
-  get dataset() { return this.self.dataset };
-
-  get textContent() { return this.self.textContent };
-
-  set textContent(v) { this.dom.textContent = v }
-
-  get id() { return this.#self.id };
-
-  get dom() { return this.#self };
-
-  get name() { return this.#name };
-
-  static #getTemplate(name) {
-    return template(name);
-  }
-
-  static uuid(name) {
-    return (name.slice(0, 1).toLowerCase() || 'o') + utils.uuid();
-  }
-
-  create() {
-    throw 'Must define create in child class of view. Cannot call create on View Class. '
-  }
-
-  init(options) {
-    throw 'Must define init in child class of view. Cannot call create on View Class. '
-  }
 
   selectDOM(selector) {
     const result = [...this.#self.querySelectorAll(selector)];

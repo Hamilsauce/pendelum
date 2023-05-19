@@ -14,6 +14,7 @@ export const ViewOptions = {
 }
 
 export const ParamConfig = {
+  param: 'oscillator',
   name: 'waveType',
   type: 'select',
   options: [...WaveTypes],
@@ -40,6 +41,14 @@ export class ParamControl {
         dataset: {
           param: config.name
         },
+        onclick: (e) => {
+          if (e.target.classList.contains('control-label')) {
+            this.toggleActive();
+
+            this.emit({ param: this.config.param, active: this.isActive })
+          }
+        },
+        onchange: () => {},
       },
       children: config.type !== 'select' ? [] : config.options.map(({ content, value }) => DOM.createElement({ tag: 'option', elementProperties: { textContent: content, value } })),
     });
@@ -55,15 +64,13 @@ export class ParamControl {
 
   get dataset() { return this.self.dataset };
 
-  get textContent() { return this.self.textContent };
-
-  set textContent(v) { this.dom.textContent = v }
-
   get id() { return this.#self.id };
 
   get dom() { return this.#self };
 
   get name() { return this.#name };
+
+  get isActive() { return this.dataset.active === 'true' ? true : false; }
 
   get label() { return this.selectDOM('.control-label') };
 
@@ -76,20 +83,13 @@ export class ParamControl {
     throw 'Must define init in child class of view. Cannot call create on View Class. '
   }
 
-  createParamGroup(paramConfig) {
-    const el = DOM.createElement(paramConfig)
+  emit(type, detail) {
+    this.#self.dispatchEvent(new CustomEvent('paramchange', { bubbles: true, detail }));
   }
 
-  // toggleIcons() {
-  //   if (this.playIcon.style.display === 'none') {
-  //     this.playIcon.style.display = null;
-  //     this.pauseIcon.style.display = 'none';
-  //   } else {
-  //     this.pauseIcon.style.display = null;
-  //     this.playIcon.style.display = 'none';
-  //   }
-  // }
-
+  toggleActive(state) {
+    this.dataset.active = state || !this.isActive;
+  }
 
   selectDOM(selector) {
     const result = [...this.#self.querySelectorAll(selector)];
