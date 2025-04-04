@@ -160,10 +160,6 @@ export class SvgCanvas {
   }
 
   containsPoint(p) {
-
-    console.warn('this', this)
-    console.warn('this.self', this.self)
-    console.warn('p', p)
     return (
       p.y >= this.boundingBox.top &&
       p.y < this.boundingBox.bottom &&
