@@ -21,14 +21,14 @@ const createText = (value, parent) => {
   textNode.appendChild(text);
   textNode.classList.add('text-node');
   textNode.setAttributeNS(null, 'text-anchor', 'middle');
-  textNode.setAttribute('x', 0.5)
-  textNode.setAttribute('y', 0.6)
+  textNode.setAttribute('x', 0.5);
+  textNode.setAttribute('y', 0.6);
 
-  textNode.setAttribute('transform', 'translate(0,0)')
+  textNode.setAttribute('transform', 'translate(0,0)');
   parent.prepend(textNode);
 
   return textNode;
-}
+};
 
 export const InitialPoints = {
   'path-point-0': Point.create(-50, 0),
@@ -37,9 +37,9 @@ export const InitialPoints = {
   'control-point-0': Point.create(-35, -50),
   'control-point-1': Point.create(-15, -50),
   'control-point-2': Point.create(25, 50),
-}
+};
 
-const pendulumStore = getPendulumStore()
+const pendulumStore = getPendulumStore();
 
 export class SvgCanvas {
   #dir;
@@ -48,6 +48,7 @@ export class SvgCanvas {
 
   constructor(el, options = {}) {
     this.self = el;
+    this.pointerTarget;
     this.setViewport();
 
     window.onresize = this.setViewport.bind(this);
@@ -65,50 +66,50 @@ export class SvgCanvas {
       filter(_ => _.target.dataset.pointGroup),
     );
 
-    this.pointerMove$ = fromEvent(this.self, 'pointermove')
+    this.pointerMove$ = fromEvent(document, 'pointermove');
 
-    this.pointerUp$ = fromEvent(this.self, 'pointerup')
+    this.pointerUp$ = fromEvent(document, 'pointerup')
+      .pipe(
+        tap(x => this.pointerTarget = null),
+      );
 
     this.pointerEvents$ = this.pointerDown$.pipe(
-      switchMap(() => this.pointerMove$.pipe(
-        map(({ target, clientX, clientY }) => ({ target: target, x: clientX, y: clientY })),
-        filter(_ => !!_.target.dataset.pointGroup),
-        groupBy(_ => _.target.dataset.pointGroup),
-        switchMap(groups$ => this.pointerUp$
-          .pipe(
-            map(() => groups$)
-          )
-        )
-      ))
-    )
+      tap(x => this.pointerTarget = x.target),
+      mergeMap((downEvent) => this.pointerMove$
+        .pipe(
+          takeUntil(this.pointerUp$),
+          map(({ clientX, clientY }) => ({ target: this.pointerTarget, x: clientX, y: clientY })),
+          groupBy(_ => _.target.dataset.pointGroup),
+        ),
+      )
+    );
 
     this.pathPoints$ = this.pointerEvents$.pipe(
       mergeMap(group$ => group$
         .pipe(
-          // sampleTime(40),
-          filter(_ => _.target.closest('.control-set')),
           tap(({ target, x, y }) => {
             const value = this.domPoint.bind(this)(target, x, y);
 
-            const setName = target.closest('.control-set').dataset.controlSetName
+            const setName = target.closest('.control-set').dataset.controlSetName;
 
-            const pointType = target.dataset.pointType
-            // const pointType = target.classList.contains('path-point') ? 'vertex' : 'control';
+            const pointType = target.dataset.pointType;
 
             const line = target.closest('.control-set').querySelector('.control-line');
 
-            target.cx.baseVal.value = value.x;
-            target.cy.baseVal.value = value.y;
-            // console.warn(value, setName, pointType);
+
+            if (!this.containsPoint(value)) {
+              target.cx.baseVal.value = value.x;
+              target.cy.baseVal.value = value.y;
+            }
+
             if (pointType === 'vertex') {
-              pendulumStore.dispatch(updateVertex({ x: value.x, y: value.y, vertex: setName }))
-              line.x2.baseVal.value = value.x
-              line.y2.baseVal.value = value.y
+              pendulumStore.dispatch(updateVertex({ x: value.x, y: value.y, vertex: setName }));
+              line.x2.baseVal.value = value.x;
+              line.y2.baseVal.value = value.y;
             } else {
-              pendulumStore.dispatch(updateControl({ x: value.x, y: value.y, control: setName }))
-              // pendulumStore.dispatch(updateControl(value))
-              line.x1.baseVal.value = value.x
-              line.y1.baseVal.value = value.y
+              pendulumStore.dispatch(updateControl({ x: value.x, y: value.y, control: setName }));
+              line.x1.baseVal.value = value.x;
+              line.y1.baseVal.value = value.y;
             }
           }),
           map(({ target, x, y }) => ({
@@ -117,13 +118,12 @@ export class SvgCanvas {
         )
       ),
       scan((inputDict, input) => ({ ...inputDict, ...input })),
-      // tap(x => console.warn('POINTS: ', x)),
-    )
+    );
 
     this.eventChannel = {
       events$: this.state.eventPoint$.pipe(map(e => ({ x: e.pageX, y: e.pageY }))),
       respond: this.boundPost
-    }
+    };
 
     Object.assign(this, options);
 
@@ -143,15 +143,34 @@ export class SvgCanvas {
     this.pathData$.subscribe();
   }
 
-  get elements() { return [...this.objectRegistry.keys()] }
+  get elements() { return [...this.objectRegistry.keys()]; }
 
-  get objectRegistry() { return this.state.objectRegistry }
+  get objectRegistry() { return this.state.objectRegistry; }
 
-  get children() { return [...this.self.children] };
+  get children() { return [...this.self.children]; };
 
-  static createCanvas(options) { return new SvgCanvas(document.createElement('svg'), options || {}) }
+  get boundingBox() {
+    return this.self.getBoundingClientRect();
+  }
 
-  static attachCanvas(el, options) { return new SvgCanvas(el, options || {}) }
+  static createCanvas(options) { return new SvgCanvas(document.createElement('svg'), options || {}); }
+
+  static attachCanvas(el, options) {
+    return new SvgCanvas(el, options || {});
+  }
+
+  containsPoint(p) {
+
+    console.warn('this', this)
+    console.warn('this.self', this.self)
+    console.warn('p', p)
+    return (
+      p.y >= this.boundingBox.top &&
+      p.y < this.boundingBox.bottom &&
+      p.x >= this.boundingBox.left &&
+      p.x < this.boundingBox.right
+    );
+  }
 
   getPointOnTrack(u) {
     let spot;
@@ -185,13 +204,13 @@ export class SvgCanvas {
     this.eventResponses$.next(data);
   }
 
-  getElementAtPoint(point) {}
+  getElementAtPoint(point) { }
 
   queryElements(selector, predicateFn) {
     return this.elements.find(predicateFn);
   }
 
-  draw() {}
+  draw() { }
 
   domPoint(element, x, y) {
     return new DOMPoint(x, y).matrixTransform(
@@ -200,7 +219,7 @@ export class SvgCanvas {
   }
 
   setViewport() {
-    this.self.setAttribute('width', this.self.parentElement ? this.self.parentElement.getBoundingClientRect().width : window.innerWidth)
-    this.self.setAttribute('height', this.self.parentElement ? this.self.parentElement.getBoundingClientRect().height : window.innerHeight)
+    this.self.setAttribute('width', this.self.parentElement ? this.self.parentElement.getBoundingClientRect().width : window.innerWidth);
+    this.self.setAttribute('height', this.self.parentElement ? this.self.parentElement.getBoundingClientRect().height : window.innerHeight);
   }
 }

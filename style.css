@@ -1,4 +1,4 @@
-/* 
+/*
 var(--accent-white40);
 */
 
@@ -15,6 +15,7 @@ var(--accent-white40);
   padding: 0;
   margin: 0;
   z-index: 0;
+  user-select: none;
 }
 
 html {
@@ -148,7 +149,7 @@ a {
   gap: 0px;
   padding: 0;
   padding: 8px 0 0 0;
-  
+
 }
 
 #param-row {
