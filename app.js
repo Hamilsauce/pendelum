@@ -29,8 +29,8 @@ const volumeButton = new VolumeButton();
 const playbackControls = document.querySelector('#playback-controls');
 
 playbackControls.append(
-  volumeButton.dom,
   pbButton.dom,
+  volumeButton.dom,
 );
 
 export class App {
@@ -125,7 +125,7 @@ export class App {
     this.startPrompt.remove();
 
     dot.init('dot', 'curve');
-   
+
     this.frequency$ = pendulumStore.select(state => state.frequency)
 
 
