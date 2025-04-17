@@ -156,8 +156,8 @@
     </footer>
   </div>
   
-  <!-- <script src="./script.js" type="module"></script> -->
   <script src="./main.js" type="module"></script>
+  <script src="./components/DialKnob.js" type="module"></script>
   
   <template id="dial-knob-template">
     <svg id="dial-knob-svg" width="40" height="40" viewBox="0 0 50 50" id="">
@@ -165,7 +165,7 @@
       <g id="knob" _transform-origin="center center" transform="translate(0,0) scale(0.5)">
         <circle cx="50" cy="50" r="40" fill="#ccc" stroke="#333" stroke-width="2" />
         <!-- The pointer/indicator (initially pointing upward) -->
-        <line id="pointer" x1="50" y1="50" x2="50" y2="20" stroke="#333" stroke-width="3" stroke-linecap="round" />
+        <line id="pointer" x1="50" y1="50" x2="50" y2="20" stroke="#333" stroke-width="4" stroke-linecap="round" />
         <text id="dial-value" text-anchor="middle" x="40" y="60" transform="scale(1.25)">100</text>
       </g>
     </svg>
