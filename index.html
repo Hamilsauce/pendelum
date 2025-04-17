@@ -52,6 +52,7 @@
       <div class="app-header-row bottom" id="">
         <div id="playback-controls"></div>
         <div id="menu">
+          
           <button id="menu-button" class="app-button">
             <svg id="ellipsis-icon" width="24" height="18" viewBox="3 1.5 16 22" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
               <g>
@@ -61,20 +62,21 @@
               </g>
             </svg>
           </button>
+          
         </div>
       </div>
     </header>
-
+    
     <section id="app-body">
       <div id="pitch-values" class="field-group">
         <div id="note-value" class="field-group-value">C3</div>
         <div id="frequency-value" class="field-group-value">130</div>
       </div>
-
+      
       <section id="start-prompt">
         <button id="start-button" data-action="start">Start</button>
       </section>
-
+      
       <svg id="canvas" width="412" height="781" viewBox="-50 -75 100 200" _preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs>
           <pattern id="smallGrid" style="z-index: 0" width="2.5" height="2.5" patternUnits="userSpaceOnUse">
@@ -90,16 +92,16 @@
           <marker id="triangleend" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
             <path d="M 0 0 L 10 5 L 0 10 z" />
           </marker>
-
+          
           <circle id="pendulum-dot-template" class="frequency-dot" cx="0" cy="0" r="2.5" fill="#FFFFFF50" />
-
+          
           <path class="pendulum-curve" id="pendulum-curve-template" d=" M -25,25 C -25,-25 25,-25 25,25" />
-
+          
           <g class="shape-container" id="fuck" data-layer="objects" transform="translate(0,0) scale(1)">
             <circle class="container-background" cx="0" cy="0" r="5" fill="#FFFFFF50" />
           </g>
         </defs>
-
+        
         <g class="scene" id="scene" transform="translate(-0,-0)" x="0" y="0">
           <g class="layer" id="surface-layer" data-layer="surface" transform="translate(-0,-0)" x="0" y="0" width="412" height="722">
             <rect transform="translate(-200,-400)" id="grid" x="0" y="0" width="412" height="722" fill="url(#largeGrid)" />
@@ -108,44 +110,44 @@
               <line id="yaxis" class="axis" x1="0" x2="0" y1="-1000" y2="1000" stroke="#FFFFFF50" stroke-width="0.35"></line>
             </g>
           </g>
-
+          
           <g class="layer" id="objects-layer" data-layer="objects" transform="translate(0,-0)">
             <g class="shape-container" id="squiggly-container" data-selected="false" data-layer="objects" transform="translate(0,0) scale(1)">
-
+              
               <g id="pendulum-container" transform="translate(-0,0) scale(1)">
                 <path id="curve" class="curve" d="
                   M -50 0
                   C -35 -50, -15 -50, 0 0
                   S 25 50, 50 0
                 " />
-
+                
                 <g data-control-set-name="start" id="control-set-0" class="control-set">
                   <line id="control-line-0" class="control-line" x1="-35" x2="-50" y1="-50" y2="0" stroke="#C2C2C280" stroke-width="0.5" />
                   <circle data-point-type="vertex" data-point-group="vertices" id="path-point-0" class="path-point" cx="-50" cy="0" r="4" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
                   <circle data-point-type="control" data-point-group="controls" id="control-point-0" class="control-point" cx="-35" cy="-50" r="4.5" fill="blue" stroke="#FFFFFF" stroke-width="0.5" />
                 </g>
-
+                
                 <g data-control-set-name="middle" id="control-set-1" class="control-set">
                   <line id="control-line-1" class="control-line" x1="-15" x2="0" y1="-50" y2="0" stroke="#C2C2C280" stroke-width="0.5" />
                   <circle data-point-type="vertex" data-point-group="vertices" id="path-point-1" class="path-point" cx="0" cy="0" r="4" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
                   <circle data-point-type="control" data-point-group="controls" id="control-point-1" class="control-point" cx="-15" cy="-50" r="4.5" fill="orange" stroke="#FFFFFF" stroke-width="0.5" />
                 </g>
-
+                
                 <g data-control-set-name="end" id="control-set-2" class="control-set">
                   <line id="control-line-2" class="control-line" x1="25" x2="50" y1="50" y2="0" stroke="#C2C2C280" stroke-width="0.5" />
                   <circle data-point-type="vertex" data-point-group="vertices" id="path-point-2" class="path-point" cx="50" cy="0" r="4" fill="teal" stroke="#FFFFFF" stroke-width="0.5" />
                   <circle data-point-type="control" data-point-group="controls" id="control-point-2" class="control-point" cx="25" cy="50" r="4.5" fill="green" stroke="#FFFFFF" stroke-width="0.5" />
                 </g>
-
+                
               </g>
             </g>
-
+            
             <circle id="dot" class="container-background" cx="0" cy="0" r="2.5" fill="#FFFFFF50" />
             <!-- <circle id="dot2" class="container-background" cx="0" cy="0" r="2.5" fill="#FFFFFF50" /> -->
           </g>
         </g>
       </svg>
-
+      
     </section>
     <footer id="app-footer">
       <div class="container">
@@ -153,24 +155,38 @@
       </div>
     </footer>
   </div>
-
+  
   <!-- <script src="./script.js" type="module"></script> -->
   <script src="./main.js" type="module"></script>
-
+  
+  <template id="dial-knob-template">
+    <svg id="dial-knob-svg" width="40" height="40" viewBox="0 0 50 50" id="">
+      <!-- Outer circle -->
+      <g id="knob" _transform-origin="center center" transform="translate(0,0) scale(0.5)">
+        <circle cx="50" cy="50" r="40" fill="#ccc" stroke="#333" stroke-width="2" />
+        <!-- The pointer/indicator (initially pointing upward) -->
+        <line id="pointer" x1="50" y1="50" x2="50" y2="20" stroke="#333" stroke-width="3" stroke-linecap="round" />
+        <text id="dial-value" text-anchor="middle" x="40" y="60" transform="scale(1.25)">100</text>
+      </g>
+    </svg>
+    
+    
+  </template>
+  
   <template id="volume-input-template">
     <div id="volume-input">
-
+      
       <button id="volume-button" class="app-button">
         <svg height="24" width="32" id="volume-icon" viewBox="3 2 28 28" xmlns="http://www.w3.org/2000/svg">
           <path fill="#FFFFFF" stroke="#FFFFFF00" d=" M2 12 L8 12 L16 6 L16 26 L8 20 L2 20 z M32 16 A16 16 0 0 1 27.25 27.375 L25.25 25.25 A13 13 0 0 0 29 16 A13 13 0 0 0 25.25 6.75 L27.25 4.625 A16 16 0 0 1 32 16 M25 16 A9 9 0 0 1 22.375 22.375 L20.25 20.25 A6 6 0 0 0 22 16 A6 6 0 0 0 20.25 11.75 L22.375 9.625 A9 9 0 0 1 25 16 " />
         </svg>
       </button>
-
+      
       <input transform-origin="center center" type="range" name="volume-range" id="volume-range" value="50" min="0.001" max="100" />
     </div>
-
+    
   </template>
-
+  
   <template id="playback-button-template">
     <button id="play-pause" class="app-button">
       <svg id="play-pause-icon" class="button-icon" width="24" height="24" viewBox="-5 -4 40 40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -183,9 +199,9 @@
         </g>
       </svg>
     </button>
-
+    
   </template>
-
+  
   <template id="control-group-template">
     <div class="control-group" data-active="false">
       <label class="control-label" data-active="false" for="-input">NULL</label>
@@ -194,7 +210,7 @@
       </div>
     </div>
   </template>
-
+  
   <template id="param-controls-template">
     <section id="param-controls">
       <div class="control-group">
@@ -220,7 +236,7 @@
       </div>
     </section>
   </template>
-
+  
   <template id="param-selector-template">
     <div id="param-selector" class="control-group">
       <!-- <label for="param-input">Oscillator</label> -->

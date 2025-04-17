@@ -4,6 +4,9 @@ import { PlaybackButton } from './components/PlaybackButton.js';
 import { VolumeButton } from './components/VolumeButton.js';
 import { roundTwo, coerce } from './lib/utils.js';
 import { anim, dot } from './components/rx-pendulum.js';
+import ham from 'https://hamilsauce.github.io/hamhelper/hamhelper1.0.0.js';
+
+const { template, DOM, utils } = ham;
 
 import { getSynthParamsStore } from './store/synth-params/synth-params.store.js';
 import { updateDuration, updateOscillator, updateDelay, updateWarbler } from './store/synth-params/synth-params.actions.js';
@@ -27,10 +30,12 @@ const pbButton = new PlaybackButton();
 const volumeButton = new VolumeButton();
 
 const playbackControls = document.querySelector('#playback-controls');
+const dialKnob = template('dial-knob')
 
 playbackControls.append(
   pbButton.dom,
   volumeButton.dom,
+  dialKnob,
 );
 
 export class App {

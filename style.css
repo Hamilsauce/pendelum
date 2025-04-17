@@ -361,12 +361,16 @@ svg * {
 
 
 #playback-controls svg {}
+#dial-knob-svg {
+  border: 1px solid white;
+  border-radius: 50%;
+}
 
 #playback-controls {
   display: flex;
   flex-direction: row;
   /* justify-content: flex-start; */
-  /* align-items: center; */
+  align-items: center;
   gap: 8px;
   width: 100%;
   z-index: 120;
