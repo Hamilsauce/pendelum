@@ -39,6 +39,7 @@ export class DialKnob extends EventEmitter {
 setTimeout(() => {
   
   const knob = document.getElementById("knob");
+  const knobSurface = knob.querySelector("circle");
   const pointer = document.getElementById("pointer");
   const dialValue = document.getElementById("dial-value");
   
@@ -58,6 +59,7 @@ setTimeout(() => {
     
     const perc = (currentAngle / 350) * 10
     dialValue.textContent = Math.round(perc)
+    
   }
   
   // Computes an absolute angle (in degrees) from the center to the pointer position.
@@ -88,6 +90,8 @@ setTimeout(() => {
     lastUnwrappedAngle = angle;
     // Capture pointer events so we keep receiving events even if the pointer leaves the knob.
     knob.setPointerCapture(e.pointerId);
+    knob.dataset.isPressed = true;
+
   });
   
   // On pointermove, update the knob rotation.
@@ -112,11 +116,13 @@ setTimeout(() => {
   // End dragging on pointerup or pointercancel.
   document.addEventListener("pointerup", (e) => {
     isDragging = false;
+    knob.dataset.isPressed = false;
     knob.releasePointerCapture(e.pointerId);
   });
+  
   knob.addEventListener("pointercancel", (e) => {
     isDragging = false;
+    knob.dataset.isPressed = false;
     knob.releasePointerCapture(e.pointerId);
   });
-  console.log(' ', );
 }, 1000)

@@ -361,9 +361,21 @@ svg * {
 
 
 #playback-controls svg {}
+
 #dial-knob-svg {
   border: 1px solid white;
   border-radius: 50%;
+}
+
+#knob{
+  transform: scale(0.5);
+  transition: 0.25s ease;
+}
+
+#knob[data-is-pressed=true] {
+  transform: translate(-12px,-13px) scale(0.75);
+  filter: brightness(1.5);
+
 }
 
 #playback-controls {
