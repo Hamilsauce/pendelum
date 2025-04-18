@@ -16,15 +16,12 @@ import { getPendulumStore } from './store/pendulum/pendulum.store.js';
 
 import { getArpRhythm } from './lib/create-rhythm.js';
 
-
 const { interval, of, fromEvent, merge, empty, delay, from } = rxjs;
 const { flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan, map, tap, filter } = rxjs.operators;
 const { fromFetch } = rxjs.fetch;
 
-
 const paramsStore = getSynthParamsStore()
 const pendulumStore = getPendulumStore()
-
 
 const pbButton = new PlaybackButton();
 const volumeButton = new VolumeButton();
@@ -46,7 +43,7 @@ export class App {
   body = document.querySelector('#app-body');
   startPrompt = document.querySelector('#start-prompt');
   startButton = document.querySelector('#start-button');
-  audio = null //(new AudioController() || new webkitAudioContext());
+  audio = null;
 
   constructor() {
     this.onPlaybackChange = this.#onPlaybackChange.bind(this);
@@ -109,7 +106,6 @@ export class App {
       const currState = p.dataset.active === 'true' ? true : false;
       p.dataset.active = !currState
       paramsStore.dispatch(updateWarbler({ active: !currState }))
-      // this.audio.toggleNode({ name: 'delay', state: !currState })
     });
   }
 
@@ -142,8 +138,6 @@ export class App {
     // )
     // .subscribe();
 
-    // console.log('arp$', arp$)
-
     this.frequency$.pipe(
       // tap(x => console.log('x', x)),
       // mergeMap(({ frequency }) => arp$.pipe(
@@ -151,7 +145,6 @@ export class App {
       //   tap(x => console.log('TAP', x)),
       // ), ),
       // map(this.audio.setFrequency),
-
       tap(this.updatePitchDisplay.bind(this)),
     ).subscribe();
 
