@@ -25,7 +25,6 @@ class BhsStore extends BehaviorSubject {
 
     this.#name = name;
 
-
     this.#reducer = storeOptions.reducer;
     
     this.#reducePipe$ = this.#updateSubject$

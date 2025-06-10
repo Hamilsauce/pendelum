@@ -66,7 +66,11 @@ export class SvgCanvas {
       filter(_ => _.target.dataset.pointGroup),
     );
 
-    this.pointerMove$ = fromEvent(document, 'pointermove');
+    this.pointerMove$ = fromEvent(document, 'pointermove')
+       .pipe(
+        // tap(x => console.log('pointerMove$', x)),
+      );
+
 
     this.pointerUp$ = fromEvent(document, 'pointerup')
       .pipe(

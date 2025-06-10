@@ -90,8 +90,6 @@ export class AudioController {
         this.#setFrequency({ frequency })
       }),
     ).subscribe();
-
-
   }
 
   get oscillatorTypes() { return ['sine', 'sawtooth', 'triangle'] }
@@ -148,7 +146,7 @@ export class AudioController {
 
         this.#oscillator.frequency.exponentialRampToValueAtTime(
           this.#oscillator.frequency.value * 1.67,
-          this.#ctx.currentTime + 0.025
+          this.#ctx.currentTime + 0.05
         );
 
         setTimeout(() => {
@@ -158,8 +156,8 @@ export class AudioController {
           );
 
           this.#oscillator.frequency.exponentialRampToValueAtTime(
-            this.#oscillator.frequency.value * 0.67,
-            this.#ctx.currentTime + 0.025
+            this.#oscillator.frequency.value * 0.01,
+            this.#ctx.currentTime + 0.01
           );
         }, 150)
 
