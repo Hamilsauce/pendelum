@@ -9,10 +9,23 @@ const { sampleTime, flatMap, reduce, groupBy, toArray, mergeMap, switchMap, scan
 
 const pendulumStore = getPendulumStore()
 
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+
 const frequencyState$ = pendulumStore.select(state => state.frequencyDot).pipe(
-  map(x => x),
+  // map(x => x),
   // tap(x => console.warn('pendulumStore', x))
 ).subscribe()
+
+
+let FREQUENCIES = []
+let counter = 0
+// const copyTextToClipboard = async (text) => {
+//   await navigator.clipboard.writeText(text);
+// };
+
 
 class FrequencyDot {
   #sprite = null;
@@ -80,11 +93,29 @@ class FrequencyDot {
     return pt;
   }
   
-  getFrequency(pt = new DOMPoint()) {
+  getFrequency2(pt = new DOMPoint()) {
     const frequency = (100 + pt.y) * 2;
     
     return { frequency };
   }
+  
+  // Use exponential scale
+  getFrequency(pt = new DOMPoint()) {
+    const norm = clamp((pt.y + 100) / 200, 0, 1); // map y to [0,1]
+    const freq = 40 * Math.pow(2, norm * 5); // ~40Hz to ~1280Hz
+    
+    const myfreq = (100 + pt.y) * 2;
+   
+    // FREQUENCIES.push({
+    //   myfreq,
+    //   freq,
+    //   diff: freq - myfreq,
+    //   time: performance.now(),
+    //   id: counter,
+    // })
+    
+    return { frequency: freq };
+  };
   
   move(u) {
     if (this.isStarted === true) {

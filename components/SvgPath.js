@@ -60,7 +60,6 @@ export class SvgPath {
     `.trim();
   }
 
-
   connect() {
     return this.#data$.asObservable()
   }

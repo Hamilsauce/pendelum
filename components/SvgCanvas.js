@@ -23,10 +23,10 @@ const createText = (value, parent) => {
   textNode.setAttributeNS(null, 'text-anchor', 'middle');
   textNode.setAttribute('x', 0.5);
   textNode.setAttribute('y', 0.6);
-
+  
   textNode.setAttribute('transform', 'translate(0,0)');
   parent.prepend(textNode);
-
+  
   return textNode;
 };
 
@@ -45,40 +45,39 @@ export class SvgCanvas {
   #dir;
   #track;
   #sprite;
-
+  
   constructor(el, options = {}) {
     this.self = el;
     this.pointerTarget;
     this.setViewport();
-
+    
     window.onresize = this.setViewport.bind(this);
-
+    
     this.boundPost = this.post.bind(this);
-
+    
     this.state = {
       objectRegistry: new Map(),
       eventPoint$: new Subject(),
     };
-
+    
     this.eventResponses$ = new Subject();
-
+    
     this.pointerDown$ = fromEvent(this.self, 'pointerdown').pipe(
       filter(_ => _.target.dataset.pointGroup),
     );
-
-    this.pointerMove$ = fromEvent(document, 'pointermove')
-       .pipe(
+    
+    this.pointerMove$ = fromEvent(this.self, 'pointermove')
+      .pipe(
         // tap(x => console.log('pointerMove$', x)),
       );
-
-
-    this.pointerUp$ = fromEvent(document, 'pointerup')
-      .pipe(
-        tap(x => this.pointerTarget = null),
-      );
-
+    
+    
+    this.pointerUp$ = fromEvent(document, 'pointerup').pipe(
+      tap(x => this.pointerTarget = null),
+    );
+    
     this.pointerEvents$ = this.pointerDown$.pipe(
-      tap(x => this.pointerTarget = x.target),
+      tap(e => this.pointerTarget = e.target),
       mergeMap((downEvent) => this.pointerMove$
         .pipe(
           takeUntil(this.pointerUp$),
@@ -87,25 +86,33 @@ export class SvgCanvas {
         ),
       )
     );
-
+    
     this.pathPoints$ = this.pointerEvents$.pipe(
       mergeMap(group$ => group$
         .pipe(
           tap(({ target, x, y }) => {
             const value = this.domPoint.bind(this)(target, x, y);
-
+            
             const setName = target.closest('.control-set').dataset.controlSetName;
-
+            
             const pointType = target.dataset.pointType;
-
+            
             const line = target.closest('.control-set').querySelector('.control-line');
-
-
+            
+            
+          
+          // NEED TO REPLACE 100 n 65 WITH VIEWPORT BOUNXDS
+            const isOutside =
+              value.x <= -65 || value.x >= 65 ||
+              value.y <= -100 || value.y >= 100;
+            
+            if (isOutside) return;
+       
             if (!this.containsPoint(value)) {
               target.cx.baseVal.value = value.x;
               target.cy.baseVal.value = value.y;
             }
-
+            
             if (pointType === 'vertex') {
               pendulumStore.dispatch(updateVertex({ x: value.x, y: value.y, vertex: setName }));
               line.x2.baseVal.value = value.x;
@@ -123,46 +130,46 @@ export class SvgCanvas {
       ),
       scan((inputDict, input) => ({ ...inputDict, ...input })),
     );
-
+    
     this.eventChannel = {
       events$: this.state.eventPoint$.pipe(map(e => ({ x: e.pageX, y: e.pageY }))),
       respond: this.boundPost
     };
-
+    
     Object.assign(this, options);
-
+    
     this.sceneLayer = this.self.querySelector('#scene');
     this.hudLayer = this.self.querySelector('#hud');
     this.surface = this.self.querySelector('#surface-layer');
-
-
+    
+    
     this.pathElement = this.self.querySelector('#curve');
-
+    
     this.pathModel = SvgPath.createPath(this.pathElement, this.pathPoints$, InitialPoints);
-
+    
     this.pathData$ = this.pathModel.connect().pipe(
       tap(x => this.pathElement.setAttribute('d', x)),
     );
-
+    
     this.pathData$.subscribe();
   }
-
+  
   get elements() { return [...this.objectRegistry.keys()]; }
-
+  
   get objectRegistry() { return this.state.objectRegistry; }
-
+  
   get children() { return [...this.self.children]; };
-
+  
   get boundingBox() {
     return this.self.getBoundingClientRect();
   }
-
+  
   static createCanvas(options) { return new SvgCanvas(document.createElement('svg'), options || {}); }
-
+  
   static attachCanvas(el, options) {
     return new SvgCanvas(el, options || {});
   }
-
+  
   containsPoint(p) {
     return (
       p.y >= this.boundingBox.top &&
@@ -171,53 +178,53 @@ export class SvgCanvas {
       p.x < this.boundingBox.right
     );
   }
-
+  
   getPointOnTrack(u) {
     let spot;
-
+    
     if (this.#dir > 0) {
       spot = this.#track.getTotalLength() - (u * this.#track.getTotalLength());
     }
-
+    
     else spot = (u * this.#track.getTotalLength());
-
+    
     if (u >= 1) {
       this.#dir = -this.#dir;
     }
-
+    
     const p = this.#track.getPointAtLength(spot);
-
+    
     return p;
   }
-
+  
   translateToPoint(pt = new DOMPoint()) {
     this.#sprite.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
-
+    
     return pt;
   }
-
+  
   update(x, y) {
     this.audio.oscillator.frequency.value = y * 2;
   }
-
+  
   post(data) {
     this.eventResponses$.next(data);
   }
-
-  getElementAtPoint(point) { }
-
+  
+  getElementAtPoint(point) {}
+  
   queryElements(selector, predicateFn) {
     return this.elements.find(predicateFn);
   }
-
-  draw() { }
-
+  
+  draw() {}
+  
   domPoint(element, x, y) {
     return new DOMPoint(x, y).matrixTransform(
       element.getScreenCTM().inverse()
     );
   }
-
+  
   setViewport() {
     this.self.setAttribute('width', this.self.parentElement ? this.self.parentElement.getBoundingClientRect().width : window.innerWidth);
     this.self.setAttribute('height', this.self.parentElement ? this.self.parentElement.getBoundingClientRect().height : window.innerHeight);
